@@ -4,7 +4,7 @@
 
 - 基于web框架[KOA](https://github.com/koajs/koa)，以及ORM框架[sequelize](https://github.com/sequelize/sequelize)，开箱即用
 - 简易登录及`JWT`验证、续签
-- 开发支持热重启
+- 支持开发热重启，支持ES6语法，支持babel转码及编译压缩
 
 ## 缺陷（待改进）
 
@@ -96,7 +96,7 @@
 
 ```sh
 # 创建并进入目录
-mkdir -p koa-rest-boilerplate && cd "$_"
+mkdir koa-rest-boilerplate && cd "$_"
 
 # 克隆项目
 git clone https://github.com/fishjar/koa-rest-boilerplate.git .

@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import logger from "./logger";
 import config from "../config";
 const { JWT_SECRET, JWT_EXPIRES_IN } = config;
 
@@ -8,6 +9,9 @@ const { JWT_SECRET, JWT_EXPIRES_IN } = config;
  * @param {string} userType 用户类型
  */
 const makeToken = ({ userName, userType }) => {
+  if (!userName || !userType) {
+    return "";
+  }
   return jwt.sign(
     {
       userName,
@@ -23,7 +27,12 @@ const makeToken = ({ userName, userType }) => {
  * @param {string} token 认证令牌
  */
 const parseToken = token => {
-  return jwt.verify(token.split(" ")[1], JWT_SECRET);
+  try {
+    return jwt.verify(token.split(" ")[1], JWT_SECRET);
+  } catch (err) {
+    logger.error(`解析token出错：${JSON.stringify(err)}`);
+    return {};
+  }
 };
 
 export default {

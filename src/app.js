@@ -21,8 +21,8 @@ app
   .use(cors())
   .use(koaBody())
   .use(reqBodyLog())
-  // .use(jwtAuth())
-  // .use(jwtRolling())
+  .use(jwtAuth())
+  .use(jwtRolling())
   .use(router.routes())
   .use(router.allowedMethods());
 
