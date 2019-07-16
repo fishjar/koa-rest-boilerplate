@@ -5,7 +5,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production node ./dist/server.js",
     "dev": "cross-env NODE_ENV=development DEBUG=koa* nodemon --inspect=0.0.0.0:9229 ./src/server.js",
-    "build": "rimraf dist && cross-env NODE_ENV=production babel src -d dist -s",
+    "build": "cross-env rimraf dist && NODE_ENV=production babel src -d dist -s",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "gabe",
