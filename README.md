@@ -1,4 +1,4 @@
-# KOA DEMO
+# KOA REST boilerplate
 
 ## 支持特性
 
@@ -117,7 +117,7 @@ yarn start
 sudo docker-compose -f ./src/db/docker-compose.mysql.yml up -d
 
 # 简易部署
-docker-compose up -d
+sudo docker-compose up -d
 ```
 
 ## 模型验证参数参考
