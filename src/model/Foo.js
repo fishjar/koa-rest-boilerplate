@@ -2,7 +2,7 @@ import Sequelize from "sequelize";
 import sequelize from "../db";
 
 const Foo = sequelize.define(
-  "foo",
+  "Foo",
   {
     id: {
       field: "id",

@@ -1,7 +1,7 @@
-import foo from "./foo";
-import account from "./account";
+import Foo from "./Foo";
+import Account from "./Account";
 
 export default {
-  foo,
-  account
+  Foo,
+  Account
 };
