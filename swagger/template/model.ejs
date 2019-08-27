@@ -1,0 +1,82 @@
+import Sequelize from "sequelize";
+import sequelize from "../db";
+<% Object.entries(model.properties)
+  .filter(([_,field])=>field.$ref)
+  .forEach(([fieldKey,field])=>{
+    const refModelKey = field.$ref.replace('#/definitions/','');
+    const refTableName = definitions[refModelKey]['x-tableName'];
+%>
+import <%- refModelKey -%> from "./<%- refTableName -%>";
+<% }) %>
+
+const <%- modelKey -%> = sequelize.define(
+  "<%- modelKey.toLowerCase() -%>",
+  {
+    <% Object.entries(model.properties).forEach(([fieldKey,field])=>{ -%>
+      <%- fieldKey -%>: {
+        field: "<%- field['x-fieldName'] || fieldKey -%>",
+
+        <% if (field.description) { %>
+        comment: "<%- field['x-description'] || field.description || null  -%>",
+        <% } %>
+
+        <% if(field.$ref) { %>
+        type: Sequelize.<%- dataFormats.['object'][0] -%>,
+        <% } else if (field['x-foreignKey']) { %>
+        type: Sequelize.<%- dataFormats.[field.format][0] -%>,
+        references: {
+          model: <%- field['x-ref'].replace('#/definitions/','') -%>,
+          key: "<%- field['x-refFieldKey'] -%>",
+        }
+        <% } else { %>
+        type: Sequelize.<%- dataFormats[field.format][0] -%>,
+        <% } -%>
+
+        <% if (field.format==='uuid') { %>
+        defaultValue: Sequelize.UUIDV4,
+        <% } else if (field.default){ %>
+        defaultValue: <%- field.default -%>,
+        <% } -%>
+
+        <% if (field['x-primaryKey']) { -%>
+        primaryKey: true
+        <% } -%>
+
+        <% if (field.uniqueItems) { %>
+        unique: true,
+        <% } -%>
+
+        <% if (model.required && model.required.includes(fieldKey)) { %>
+        allowNull: false,
+        <% } -%>
+
+        validate: {
+          <% if (field.minLength!==undefined && field.maxLength!==undefined) { -%>
+          len: [<%- field.minLength -%>, <%- field.maxLength -%>],
+          <% } %>
+
+          <% if (field.minimum) { -%>
+          min: <%- field.minimum -%>,
+          <% } %>
+
+          <% if (field.maximum) { -%>
+          max: <%- field.maximum -%>,
+          <% } -%>
+
+          <% if (field.enum) { -%>
+          isIn: [[<% field.enum.forEach(item=>{ %> <%- item -%>,<% }) -%>]],
+          <% } %>
+        },
+
+      },
+    <% }) -%>
+  },
+  {
+    underscored: true, // 下划线字段
+    paranoid: true, // 软删除
+    freezeTableName: true, // 禁用修改表名
+    tableName: "<%- modelKey.toLowerCase() -%>", // 定义表的名称
+  }
+);
+
+export default <%- modelKey -%>;
