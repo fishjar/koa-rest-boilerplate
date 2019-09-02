@@ -1,7 +1,7 @@
-import User from "./User";
+import AdminUser from "./AdminUser";
 import Foo from "./Foo";
 
 export default {
-  User,
-  Foo
+  AdminUser,
+  Foo,
 };
