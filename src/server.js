@@ -7,7 +7,12 @@ import sign from "./utils/sign";
 const { NODE_PORT, DEFAULT_USERNAME, DEFAULT_PASSWORD } = config;
 
 sequelize
-  .sync() // 带上{force: true}参数会强制删除已存在的表
+  .authenticate() // 测试数据库连接
+  .then(() => {
+    console.log("连接数据库成功");
+    // return sequelize.sync();
+    return sequelize.sync({force: true}); // 带上{force: true}参数会强制删除已存在的表
+  })
   .then(() => {
     // 创建默认用户
     return model.User.findOrCreate({

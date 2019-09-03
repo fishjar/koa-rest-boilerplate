@@ -12,9 +12,10 @@ const account = async (ctx, next) => {
   }
 
   const authType = "account";
+  const isEnabled = true;
   const authCode = sign.signPwd(authName, password);
   const auth = await model.Auth.findOne({
-    where: { authType, authName, authCode },
+    where: { authType, authName, authCode, isEnabled },
   });
   if (!auth) {
     ctx.throw(401, "用户名或密码错误");

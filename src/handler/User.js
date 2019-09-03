@@ -94,13 +94,13 @@ const findOne = async (ctx, next) => {
  * 查询或创建单条信息
  */
 const findOrCreate = async (ctx, next) => {
-  const [data, is_new_record] = await model.User.findOrCreate({
+  const [data, isNew] = await model.User.findOrCreate({
     where: ctx.request.body,
   });
   ctx.body = {
     // ...data.toJSON(),
     ...data.get({ plain: true }),
-    is_new_record,
+    isNew,
   };
   await next();
 };

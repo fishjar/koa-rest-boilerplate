@@ -15,6 +15,12 @@ export default sequelize.define(
       field: "name",
       comment: "姓名",
       type: Sequelize.STRING(32),
+      allowNull: false,
+      validate: {
+        notNull: true,
+        notEmpty: true,
+        len: [3, 20],
+      },
     },
     nickname: {
       field: "nickname",
@@ -32,7 +38,7 @@ export default sequelize.define(
     avatar: {
       field: "avatar",
       comment: "头像",
-      type: Sequelize.STRING(255),
+      type: Sequelize.STRING,
     },
     mobile: {
       field: "mobile",
@@ -42,7 +48,7 @@ export default sequelize.define(
     email: {
       field: "email",
       comment: "邮箱",
-      type: Sequelize.STRING(255),
+      type: Sequelize.STRING,
       validate: {
         isEmail: true,
       },
@@ -50,7 +56,7 @@ export default sequelize.define(
     homepage: {
       field: "homepage",
       comment: "个人主页",
-      type: Sequelize.STRING(255),
+      type: Sequelize.STRING,
       validate: {
         isUrl: true,
       },
@@ -59,6 +65,9 @@ export default sequelize.define(
       field: "birthday",
       comment: "生日",
       type: Sequelize.DATEONLY,
+      validate: {
+        isDate: true,
+      },
     },
     height: {
       field: "height",
@@ -67,6 +76,7 @@ export default sequelize.define(
       validate: {
         min: 0,
         max: 300,
+        isFloat: true,
       },
     },
     intro: {
@@ -89,12 +99,27 @@ export default sequelize.define(
       comment: "积分",
       type: Sequelize.INTEGER,
       defaultValue: 0,
+      validate: {
+        isInt: true,
+        // 自定义验证器的示例:
+        isPlus(value) {
+          if (value < 0) {
+            throw new Error("积分不能为负数!");
+          }
+        },
+      },
+    },
+    no: {
+      field: "no",
+      comment: "编号",
+      type: Sequelize.INTEGER,
+      autoIncrement: true, // slqlite 无效？
     },
   },
   {
-    underscored: true, // 下划线字段
+    underscored: true, // 使用下划线字段
     paranoid: true, // 软删除
-    freezeTableName: true, // 禁用修改表名
+    freezeTableName: true, // 禁用表名自动复数
     tableName: "user", // 定义表的名称
   }
 );

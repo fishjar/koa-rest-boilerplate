@@ -36,16 +36,23 @@ export default sequelize.define(
       comment: "鉴权名称",
       type: Sequelize.STRING(128),
       allowNull: false,
+      validate: {
+        notNull: true,
+        notEmpty: true,
+      },
     },
     authCode: {
       field: "auth_code",
       comment: "鉴权识别码",
-      type: Sequelize.STRING(255),
+      type: Sequelize.STRING,
     },
     verifyTime: {
       field: "verify_time",
       comment: "认证时间",
       type: Sequelize.DATE,
+      validate: {
+        isDate: true,
+      },
     },
     expireTime: {
       field: "expire_time",
@@ -60,9 +67,9 @@ export default sequelize.define(
     },
   },
   {
-    underscored: true, // 下划线字段
+    underscored: true, // 使用下划线字段
     paranoid: true, // 软删除
-    freezeTableName: true, // 禁用修改表名
+    freezeTableName: true, // 禁用表名自动复数
     tableName: "auth", // 定义表的名称
   }
 );
