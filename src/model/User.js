@@ -17,7 +17,6 @@ export default sequelize.define(
       type: Sequelize.STRING(32),
       allowNull: false,
       validate: {
-        notNull: true,
         notEmpty: true,
         len: [3, 20],
       },
