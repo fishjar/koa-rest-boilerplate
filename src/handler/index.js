@@ -1,7 +1,9 @@
-import Foo from "./Foo";
-import Account from "./Account";
+import Login from "./Login";
+import User from "./User";
+import Auth from "./Auth";
 
 export default {
-  Foo,
-  Account
+  Login,
+  User,
+  Auth,
 };

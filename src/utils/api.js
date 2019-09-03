@@ -1,10 +1,10 @@
 import rq from "./request";
 
 /**
- * 
- * @param {object} qs 
+ * 请求示例
+ * @param {object} qs
  */
-export async function fetchDemo(qs) {
+export const fetchTest = qs => {
   return rq({
     method: "GET",
     uri: "https://api.github.com/",
@@ -17,10 +17,10 @@ export async function fetchDemo(qs) {
     // body: {
     //   some: 'payload',
     // },
-    qs
+    qs,
   });
-}
+};
 
 export default {
-  fetchDemo
+  fetchTest,
 };

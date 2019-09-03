@@ -11,7 +11,7 @@ const findAndCountAll = async (ctx, next) => {
   } else if (sorter) {
     order = [sorter.split("__")];
   }
-  ctx.body = await model.Foo.findAndCountAll({
+  ctx.body = await model.User.findAndCountAll({
     where,
     offset: (page_num - 1) * page_size,
     limit: page_size,
@@ -24,7 +24,7 @@ const findAndCountAll = async (ctx, next) => {
  * 根据ID查询单条信息
  */
 const findById = async (ctx, next) => {
-  ctx.body = await model.Foo.findById(ctx.params.id);
+  ctx.body = await model.User.findById(ctx.params.id);
   await next();
 };
 
@@ -32,7 +32,7 @@ const findById = async (ctx, next) => {
  * 创建单条信息
  */
 const singleCreate = async (ctx, next) => {
-  ctx.body = await model.Foo.create(ctx.request.body);
+  ctx.body = await model.User.create(ctx.request.body);
   await next();
 };
 
@@ -40,7 +40,7 @@ const singleCreate = async (ctx, next) => {
  * 创建多条信息
  */
 const bulkCreate = async (ctx, next) => {
-  ctx.body = await model.Foo.bulkCreate(ctx.request.body);
+  ctx.body = await model.User.bulkCreate(ctx.request.body);
   await next();
 };
 
@@ -48,7 +48,7 @@ const bulkCreate = async (ctx, next) => {
  * 更新多条信息
  */
 const bulkUpdate = async (ctx, next) => {
-  ctx.body = await model.Foo.update(ctx.request.body.fields, {
+  ctx.body = await model.User.update(ctx.request.body.fields, {
     where: ctx.request.body.filter,
   });
   await next();
@@ -58,7 +58,7 @@ const bulkUpdate = async (ctx, next) => {
  * 更新单条信息
  */
 const updateById = async (ctx, next) => {
-  const obj = await model.Foo.findById(ctx.params.id);
+  const obj = await model.User.findById(ctx.params.id);
   ctx.body = await obj.update(ctx.request.body);
   await next();
 };
@@ -67,7 +67,7 @@ const updateById = async (ctx, next) => {
  * 删除多条信息
  */
 const bulkDestroy = async (ctx, next) => {
-  ctx.body = await model.Foo.destroy({
+  ctx.body = await model.User.destroy({
     where: ctx.request.body,
   });
   await next();
@@ -77,7 +77,7 @@ const bulkDestroy = async (ctx, next) => {
  * 删除单条信息
  */
 const destroyById = async (ctx, next) => {
-  const obj = await model.Foo.findById(ctx.params.id);
+  const obj = await model.User.findById(ctx.params.id);
   ctx.body = await obj.destroy();
   await next();
 };
@@ -86,7 +86,7 @@ const destroyById = async (ctx, next) => {
  * 查询单条信息
  */
 const findOne = async (ctx, next) => {
-  ctx.body = await model.Foo.findOne({ where: ctx.query });
+  ctx.body = await model.User.findOne({ where: ctx.query });
   await next();
 };
 
@@ -94,7 +94,7 @@ const findOne = async (ctx, next) => {
  * 查询或创建单条信息
  */
 const findOrCreate = async (ctx, next) => {
-  const [data, is_new_record] = await model.Foo.findOrCreate({
+  const [data, is_new_record] = await model.User.findOrCreate({
     where: ctx.request.body,
   });
   ctx.body = {

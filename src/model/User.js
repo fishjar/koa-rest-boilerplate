@@ -2,7 +2,7 @@ import Sequelize from "sequelize";
 import sequelize from "../db";
 
 export default sequelize.define(
-  "AdminUser",
+  "User",
   {
     id: {
       field: "id",
@@ -10,28 +10,6 @@ export default sequelize.define(
       type: Sequelize.UUID,
       defaultValue: Sequelize.UUIDV4,
       primaryKey: true,
-    },
-    userName: {
-      field: "user_name",
-      comment: "用户名",
-      type: Sequelize.STRING(32),
-      allowNull: false,
-      unique: true,
-      validate: {
-        len: [3, 32],
-      },
-    },
-    userType: {
-      field: "user_type",
-      comment: "用户类型",
-      type: Sequelize.STRING(32),
-      allowNull: false,
-    },
-    password: {
-      field: "password",
-      comment: "密码",
-      type: Sequelize.STRING(64),
-      allowNull: false,
     },
     name: {
       field: "name",
@@ -48,7 +26,7 @@ export default sequelize.define(
       comment: "性别",
       type: Sequelize.TINYINT,
       validate: {
-        isIn: [[0, 1, 2]],
+        isIn: [[0, 1, 2]], // 保密|男|女
       },
     },
     avatar: {
@@ -74,22 +52,17 @@ export default sequelize.define(
       comment: "个人主页",
       type: Sequelize.STRING(255),
       validate: {
-        isUrl: true
-      }
+        isUrl: true,
+      },
     },
     birthday: {
       field: "birthday",
       comment: "生日",
       type: Sequelize.DATEONLY,
     },
-    verifyTime: {
-      field: "verify_time",
-      comment: "认证时间",
-      type: Sequelize.DATE,
-    },
     height: {
       field: "height",
-      comment: "身高",
+      comment: "身高(cm)",
       type: Sequelize.FLOAT,
       validate: {
         min: 0,
@@ -101,26 +74,27 @@ export default sequelize.define(
       comment: "简介",
       type: Sequelize.TEXT,
     },
+    notice: {
+      field: "notice",
+      comment: "备注",
+      type: Sequelize.TEXT,
+    },
     address: {
       field: "address",
       comment: "地址",
       type: Sequelize.JSON, // {province,city}
     },
-    isMarried: {
-      field: "is_married",
-      comment: "是否结婚",
-      type: Sequelize.BOOLEAN,
-    },
     score: {
       field: "score",
       comment: "积分",
       type: Sequelize.INTEGER,
+      defaultValue: 0,
     },
   },
   {
     underscored: true, // 下划线字段
     paranoid: true, // 软删除
     freezeTableName: true, // 禁用修改表名
-    tableName: "admin_user", // 定义表的名称
+    tableName: "user", // 定义表的名称
   }
 );

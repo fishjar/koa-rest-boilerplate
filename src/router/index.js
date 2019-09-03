@@ -1,23 +1,32 @@
 import Router from "koa-router";
-
 import handler from "../handler";
 
 const router = new Router();
 router
-  .post("/account/login", handler.Account.login)
+  .get("/user", handler.User.findOne)                 // 根据条件查找单条
+  .post("/user", handler.User.findOrCreate)           // 查找或创建单条
+  .get("/users", handler.User.findAndCountAll)        // 获取多条
+  .post("/users", handler.User.singleCreate)          // 创建单条
+  .patch("/users", handler.User.bulkUpdate)           // 更新多条
+  .delete("/users", handler.User.bulkDestroy)         // 删除多条
+  .get("/users/:id", handler.User.findById)           // 根据ID查找单条
+  .patch("/users/:id", handler.User.updateById)       // 更新单条
+  .delete("/users/:id", handler.User.destroyById)     // 删除单条
+  .post("/users/multiple", handler.User.bulkCreate)   // 创建多条
 
-  .get("/foo", handler.Foo.findOne)                 // 根据条件查找单条
-  .post("/foo", handler.Foo.findOrCreate)           // 查找或创建单条
+  .get("/auth", handler.Auth.findOne)                 // 根据条件查找单条
+  .post("/auth", handler.Auth.findOrCreate)           // 查找或创建单条
+  .get("/auths", handler.Auth.findAndCountAll)        // 获取多条
+  .post("/auths", handler.Auth.singleCreate)          // 创建单条
+  .patch("/auths", handler.Auth.bulkUpdate)           // 更新多条
+  .delete("/auths", handler.Auth.bulkDestroy)         // 删除多条
+  .get("/auths/:id", handler.Auth.findById)           // 根据ID查找单条
+  .patch("/auths/:id", handler.Auth.updateById)       // 更新单条
+  .delete("/auths/:id", handler.Auth.destroyById)     // 删除单条
+  .post("/auths/multiple", handler.Auth.bulkCreate)   // 创建多条
 
-  .get("/foos", handler.Foo.findAndCountAll)        // 获取多条
-  .post("/foos", handler.Foo.singleCreate)          // 创建单条
-  .patch("/foos", handler.Foo.bulkUpdate)           // 更新多条
-  .delete("/foos", handler.Foo.bulkDestroy)         // 删除多条
-
-  .get("/foos/:id", handler.Foo.findById)           // 根据ID查找单条
-  .patch("/foos/:id", handler.Foo.updateById)       // 更新单条
-  .delete("/foos/:id", handler.Foo.destroyById)     // 删除单条
-  
-  .post("/foos/multiple", handler.Foo.bulkCreate);  // 创建多条
+  .post("/login/account", handler.Login.account)      // 帐号密码登录
+  .post("/login/phone", handler.Login.phone)          // 手机登录
+  .post("/login/wechat", handler.Login.wechat);       // 微信登录
 
 export default router;
