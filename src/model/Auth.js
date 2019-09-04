@@ -73,7 +73,4 @@ const Auth = sequelize.define(
   }
 );
 
-// Auth.belongsTo(User);
-// User.hasMany(Auth,{as:"user"})
-
 export default Auth;
