@@ -7,10 +7,10 @@ import rq from "./request";
 export const fetchTest = qs => {
   return rq({
     method: "GET",
-    uri: "https://api.github.com/",
-    // headers: {
-    //   'User-Agent': 'Request-Promise',
-    // },
+    uri: "https://api.github.com",
+    headers: {
+      'User-Agent': 'Request-Promise',
+    },
     // qs: {
     //   foo: 'bar',
     // },

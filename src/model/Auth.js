@@ -2,8 +2,8 @@ import Sequelize from "sequelize";
 import sequelize from "../db";
 import User from "./User";
 
-export default sequelize.define(
-  "Auth",
+const Auth = sequelize.define(
+  "auth",
   {
     id: {
       field: "id",
@@ -72,3 +72,8 @@ export default sequelize.define(
     tableName: "auth", // 定义表的名称
   }
 );
+
+// Auth.belongsTo(User);
+// User.hasMany(Auth,{as:"user"})
+
+export default Auth;

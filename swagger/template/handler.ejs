@@ -23,12 +23,12 @@ const findAndCountAll = async (ctx, next) => {
 <% } %>
 
 
-<% if(model['x-apis'].includes('findById')) { %>
+<% if(model['x-apis'].includes('findByPk')) { %>
 /**
- * 根据ID查询单条信息
+ * 根据主键查询单条信息
  */
-const findById = async (ctx, next) => {
-  ctx.body = await model.<%- modelKey -%>.findById(ctx.params.id);
+const findByPk = async (ctx, next) => {
+  ctx.body = await model.<%- modelKey -%>.findByPk(ctx.params.id);
   await next();
 };
 <% } %>
@@ -69,12 +69,12 @@ const bulkUpdate = async (ctx, next) => {
 <% } %>
 
 
-<% if(model['x-apis'].includes('updateById')) { %>
+<% if(model['x-apis'].includes('updateByPk')) { %>
 /**
  * 更新单条信息
  */
-const updateById = async (ctx, next) => {
-  const obj = await model.<%- modelKey -%>.findById(ctx.params.id);
+const updateByPk = async (ctx, next) => {
+  const obj = await model.<%- modelKey -%>.findByPk(ctx.params.id);
   ctx.body = await obj.update(ctx.request.body);
   await next();
 };
@@ -94,12 +94,12 @@ const bulkDestroy = async (ctx, next) => {
 <% } %>
 
 
-<% if(model['x-apis'].includes('destroyById')) { %>
+<% if(model['x-apis'].includes('destroyByPk')) { %>
 /**
  * 删除单条信息
  */
-const destroyById = async (ctx, next) => {
-  const obj = await model.<%- modelKey -%>.findById(ctx.params.id);
+const destroyByPk = async (ctx, next) => {
+  const obj = await model.<%- modelKey -%>.findByPk(ctx.params.id);
   ctx.body = await obj.destroy();
   await next();
 };

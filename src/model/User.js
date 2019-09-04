@@ -1,8 +1,8 @@
 import Sequelize from "sequelize";
 import sequelize from "../db";
 
-export default sequelize.define(
-  "User",
+const User = sequelize.define(
+  "user",
   {
     id: {
       field: "id",
@@ -122,3 +122,5 @@ export default sequelize.define(
     tableName: "user", // 定义表的名称
   }
 );
+
+export default User;

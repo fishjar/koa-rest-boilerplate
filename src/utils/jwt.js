@@ -32,7 +32,12 @@ const parseToken = authToken => {
   try {
     return jwt.verify(authToken.split(" ")[1], JWT_SECRET);
   } catch (err) {
-    logger.error(`解析token出错：${JSON.stringify(err)}`);
+    logger.error(
+      `[解析token出错] ${JSON.stringify({
+        authToken,
+        err,
+      })}`
+    );
     return {};
   }
 };

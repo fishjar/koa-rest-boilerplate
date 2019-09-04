@@ -11,7 +11,7 @@ sequelize
   .then(() => {
     console.log("连接数据库成功");
     // return sequelize.sync();
-    return sequelize.sync({force: true}); // 带上{force: true}参数会强制删除已存在的表
+    return sequelize.sync({ force: true }); // 带上{force: true}参数会强制删除已存在的表
   })
   .then(() => {
     // 创建默认用户
@@ -30,6 +30,8 @@ sequelize
         authType: "account",
         authName: DEFAULT_USERNAME,
         authCode,
+        verifyTime: new Date(),
+        expireTime: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
       },
     });
   })

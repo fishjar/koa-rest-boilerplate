@@ -4,6 +4,9 @@ import model from "../model";
  * 查询多条信息
  */
 const findAndCountAll = async (ctx, next) => {
+
+  model.Auth.belongsTo(model.User);
+
   const { page_num = 1, page_size = 10, sorter, ...where } = ctx.query;
   let order = [];
   if (Array.isArray(sorter)) {
@@ -11,20 +14,22 @@ const findAndCountAll = async (ctx, next) => {
   } else if (sorter) {
     order = [sorter.split("__")];
   }
-  ctx.body = await model.Auth.findAndCountAll({
+  const { count, rows } = await model.Auth.findAndCountAll({
     where,
     offset: (page_num - 1) * page_size,
     limit: page_size,
     order,
+    include: [ model.User ]
   });
+  ctx.body = { count, rows };
   await next();
 };
 
 /**
- * 根据ID查询单条信息
+ * 根据主键查询单条信息
  */
-const findById = async (ctx, next) => {
-  ctx.body = await model.Auth.findById(ctx.params.id);
+const findByPk = async (ctx, next) => {
+  ctx.body = await model.Auth.findByPk(ctx.params.id);
   await next();
 };
 
@@ -57,8 +62,8 @@ const bulkUpdate = async (ctx, next) => {
 /**
  * 更新单条信息
  */
-const updateById = async (ctx, next) => {
-  const obj = await model.Auth.findById(ctx.params.id);
+const updateByPk = async (ctx, next) => {
+  const obj = await model.Auth.findByPk(ctx.params.id);
   ctx.body = await obj.update(ctx.request.body);
   await next();
 };
@@ -76,8 +81,8 @@ const bulkDestroy = async (ctx, next) => {
 /**
  * 删除单条信息
  */
-const destroyById = async (ctx, next) => {
-  const obj = await model.Auth.findById(ctx.params.id);
+const destroyByPk = async (ctx, next) => {
+  const obj = await model.Auth.findByPk(ctx.params.id);
   ctx.body = await obj.destroy();
   await next();
 };
@@ -94,26 +99,26 @@ const findOne = async (ctx, next) => {
  * 查询或创建单条信息
  */
 const findOrCreate = async (ctx, next) => {
-  const [data, isNew] = await model.Auth.findOrCreate({
+  const [obj, created] = await model.Auth.findOrCreate({
     where: ctx.request.body,
   });
   ctx.body = {
-    // ...data.toJSON(),
-    ...data.get({ plain: true }),
-    isNew,
+    // ...obj.toJSON(),
+    ...obj.get({ plain: true }),
+    created,
   };
   await next();
 };
 
 export default {
   findAndCountAll,
-  findById,
+  findByPk,
   singleCreate,
   bulkCreate,
   bulkUpdate,
-  updateById,
+  updateByPk,
   bulkDestroy,
-  destroyById,
+  destroyByPk,
   findOne,
   findOrCreate,
 };

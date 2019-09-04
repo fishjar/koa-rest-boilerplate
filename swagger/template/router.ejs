@@ -35,16 +35,16 @@ router
     .delete("/<%- modelKeyPlural -%>", handler.<%- modelKey -%>.bulkDestroy)         // 删除多条
   <% } %>
   
-  <% if(model['x-apis'].includes('findById')) { %>
-    .get("/<%- modelKeyPlural -%>/:id", handler.<%- modelKey -%>.findById)           // 根据ID查找单条
+  <% if(model['x-apis'].includes('findByPk')) { %>
+    .get("/<%- modelKeyPlural -%>/:id", handler.<%- modelKey -%>.findByPk)           // 根据主键查找单条
   <% } %>
   
-  <% if(model['x-apis'].includes('updateById')) { %>
-    .patch("/<%- modelKeyPlural -%>/:id", handler.<%- modelKey -%>.updateById)       // 更新单条
+  <% if(model['x-apis'].includes('updateByPk')) { %>
+    .patch("/<%- modelKeyPlural -%>/:id", handler.<%- modelKey -%>.updateByPk)       // 更新单条
   <% } %>
   
-  <% if(model['x-apis'].includes('destroyById')) { %>
-    .delete("/<%- modelKeyPlural -%>/:id", handler.<%- modelKey -%>.destroyById)     // 删除单条
+  <% if(model['x-apis'].includes('destroyByPk')) { %>
+    .delete("/<%- modelKeyPlural -%>/:id", handler.<%- modelKey -%>.destroyByPk)     // 删除单条
   <% } %>
   
   <% if(model['x-apis'].includes('bulkCreate')) { %>
