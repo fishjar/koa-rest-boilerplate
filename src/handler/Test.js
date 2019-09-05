@@ -12,7 +12,7 @@ const fetch = async (ctx, next) => {
   }
   ctx.body = res;
 
-  await next();
+  next();
 };
 
 export default {

@@ -4,8 +4,6 @@ import model from "../model";
  * 查询多条信息
  */
 const findAndCountAll = async (ctx, next) => {
-  // model.Auth.belongsTo(model.User);
-
   const { page_num = 1, page_size = 10, sorter, ...where } = ctx.query;
   let order = [];
   if (Array.isArray(sorter)) {
@@ -18,6 +16,7 @@ const findAndCountAll = async (ctx, next) => {
     offset: (page_num - 1) * page_size,
     limit: page_size,
     order,
+    attributes: { exclude: ["authCode"] },
     include: [
       {
         model: model.User,
@@ -30,15 +29,17 @@ const findAndCountAll = async (ctx, next) => {
     ],
   });
   ctx.body = { count, rows };
-  await next();
+  next();
 };
 
 /**
  * 根据主键查询单条信息
  */
 const findByPk = async (ctx, next) => {
-  ctx.body = await model.Auth.findByPk(ctx.params.id);
-  await next();
+  const obj = await model.Auth.findByPk(ctx.params.id);
+  obj["user"] = await model.User.findByPk(obj.userId);
+  ctx.body = obj;
+  next();
 };
 
 /**
@@ -46,15 +47,15 @@ const findByPk = async (ctx, next) => {
  */
 const singleCreate = async (ctx, next) => {
   ctx.body = await model.Auth.create(ctx.request.body);
-  await next();
+  next();
 };
 
 /**
  * 创建多条信息
  */
 const bulkCreate = async (ctx, next) => {
-  ctx.body = await model.Auth.bulkCreate(ctx.request.body);
-  await next();
+  ctx.body = await model.Auth.bulkCreate(ctx.request.body, { validate: true });
+  next();
 };
 
 /**
@@ -64,7 +65,7 @@ const bulkUpdate = async (ctx, next) => {
   ctx.body = await model.Auth.update(ctx.request.body.fields, {
     where: ctx.request.body.filter,
   });
-  await next();
+  next();
 };
 
 /**
@@ -73,7 +74,7 @@ const bulkUpdate = async (ctx, next) => {
 const updateByPk = async (ctx, next) => {
   const obj = await model.Auth.findByPk(ctx.params.id);
   ctx.body = await obj.update(ctx.request.body);
-  await next();
+  next();
 };
 
 /**
@@ -83,7 +84,7 @@ const bulkDestroy = async (ctx, next) => {
   ctx.body = await model.Auth.destroy({
     where: ctx.request.body,
   });
-  await next();
+  next();
 };
 
 /**
@@ -92,15 +93,17 @@ const bulkDestroy = async (ctx, next) => {
 const destroyByPk = async (ctx, next) => {
   const obj = await model.Auth.findByPk(ctx.params.id);
   ctx.body = await obj.destroy();
-  await next();
+  next();
 };
 
 /**
  * 查询单条信息
  */
 const findOne = async (ctx, next) => {
-  ctx.body = await model.Auth.findOne({ where: ctx.query });
-  await next();
+  const obj = await model.Auth.findOne({ where: ctx.query });
+  obj["user"] = await model.User.findByPk(obj.userId);
+  ctx.body = obj;
+  next();
 };
 
 /**
@@ -115,7 +118,7 @@ const findOrCreate = async (ctx, next) => {
     ...obj.get({ plain: true }),
     created,
   };
-  await next();
+  next();
 };
 
 export default {

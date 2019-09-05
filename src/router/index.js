@@ -2,12 +2,15 @@ import Router from "koa-router";
 import handler from "../handler";
 
 const router = new Router();
+const userAuth = (roles) => (ctx, next) => {
+  next();
+}
 router
   .get("/test/fetch", handler.Test.fetch)
 
   .get("/user", handler.User.findOne)                 // 根据条件查找单条
   .post("/user", handler.User.findOrCreate)           // 查找或创建单条
-  .get("/users", handler.User.findAndCountAll)        // 获取多条
+  .get("/users", userAuth(["admin"]), handler.User.findAndCountAll)        // 获取多条
   .post("/users", handler.User.singleCreate)          // 创建单条
   .patch("/users", handler.User.bulkUpdate)           // 更新多条
   .delete("/users", handler.User.bulkDestroy)         // 删除多条

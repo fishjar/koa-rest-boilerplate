@@ -14,12 +14,20 @@ sequelize
     return sequelize.sync({ force: true }); // 带上{force: true}参数会强制删除已存在的表
   })
   .then(() => {
+    // 创建admin角色
+    return model.Role.findOrCreate({ where: { name: "admin" } });
+  })
+  .then(() => {
+    // 创建user角色
+    return model.Role.findOrCreate({ where: { name: "user" } });
+  })
+  .then(() => {
+    // 创建guest角色
+    return model.Role.findOrCreate({ where: { name: "guest" } });
+  })
+  .then(() => {
     // 创建默认用户
-    return model.User.findOrCreate({
-      where: {
-        name: DEFAULT_USERNAME,
-      },
-    });
+    return model.User.findOrCreate({ where: { name: DEFAULT_USERNAME } });
   })
   .then(([user, _]) => {
     // 创建默认鉴权

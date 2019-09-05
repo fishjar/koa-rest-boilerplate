@@ -4,8 +4,6 @@ import model from "../model";
  * 查询多条信息
  */
 const findAndCountAll = async (ctx, next) => {
-  // model.User.hasMany(model.Auth);
-
   const { page_num = 1, page_size = 10, sorter, ...where } = ctx.query;
   let order = [];
   if (Array.isArray(sorter)) {
@@ -30,7 +28,7 @@ const findAndCountAll = async (ctx, next) => {
     ],
   });
   ctx.body = { count, rows };
-  await next();
+  next();
 };
 
 /**
@@ -42,7 +40,7 @@ const findByPk = async (ctx, next) => {
     ctx.throw(404, "记录不存在");
   }
   ctx.body = obj;
-  await next();
+  next();
 };
 
 /**
@@ -50,7 +48,7 @@ const findByPk = async (ctx, next) => {
  */
 const singleCreate = async (ctx, next) => {
   ctx.body = await model.User.create(ctx.request.body);
-  await next();
+  next();
 };
 
 /**
@@ -58,7 +56,7 @@ const singleCreate = async (ctx, next) => {
  */
 const bulkCreate = async (ctx, next) => {
   ctx.body = await model.User.bulkCreate(ctx.request.body);
-  await next();
+  next();
 };
 
 /**
@@ -68,7 +66,7 @@ const bulkUpdate = async (ctx, next) => {
   ctx.body = await model.User.update(ctx.request.body.fields, {
     where: ctx.request.body.filter,
   });
-  await next();
+  next();
 };
 
 /**
@@ -77,7 +75,7 @@ const bulkUpdate = async (ctx, next) => {
 const updateByPk = async (ctx, next) => {
   const obj = await model.User.findByPk(ctx.params.id);
   ctx.body = await obj.update(ctx.request.body);
-  await next();
+  next();
 };
 
 /**
@@ -87,7 +85,7 @@ const bulkDestroy = async (ctx, next) => {
   ctx.body = await model.User.destroy({
     where: ctx.request.body,
   });
-  await next();
+  next();
 };
 
 /**
@@ -96,7 +94,7 @@ const bulkDestroy = async (ctx, next) => {
 const destroyByPk = async (ctx, next) => {
   const obj = await model.User.findByPk(ctx.params.id);
   ctx.body = await obj.destroy();
-  await next();
+  next();
 };
 
 /**
@@ -104,7 +102,7 @@ const destroyByPk = async (ctx, next) => {
  */
 const findOne = async (ctx, next) => {
   ctx.body = await model.User.findOne({ where: ctx.query });
-  await next();
+  next();
 };
 
 /**
@@ -119,7 +117,7 @@ const findOrCreate = async (ctx, next) => {
     ...obj.get({ plain: true }),
     created,
   };
-  await next();
+  next();
 };
 
 export default {
