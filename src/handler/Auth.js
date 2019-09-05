@@ -1,5 +1,4 @@
 import model from "../model";
-import logger from "../utils/logger";
 
 /**
  * 查询多条信息
@@ -83,19 +82,9 @@ const bulkUpdate = async (ctx, next) => {
  * 更新单条信息
  */
 const updateByPk = async (ctx, next) => {
-  try {
-    const auth = await model.Auth.findByPk(ctx.params.id);
-    ctx.assert(auth, 500, "记录不存在");
-    ctx.body = await auth.update(ctx.request.body);
-  } catch (err) {
-    logger.error(
-      `[更新失败] ${JSON.stringify({
-        auth: ctx.state.auth,
-        err,
-      })}`
-    );
-    ctx.throw(500, "更新失败");
-  }
+  const auth = await model.Auth.findByPk(ctx.params.id);
+  ctx.assert(auth, 404, "记录不存在");
+  ctx.body = await auth.update(ctx.request.body);
 
   next();
 };
@@ -116,7 +105,7 @@ const bulkDestroy = async (ctx, next) => {
  */
 const destroyByPk = async (ctx, next) => {
   const auth = await model.Auth.findByPk(ctx.params.id);
-  ctx.assert(auth, 500, "记录不存在");
+  ctx.assert(auth, 404, "记录不存在");
   ctx.body = await auth.destroy();
 
   next();

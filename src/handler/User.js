@@ -1,5 +1,4 @@
 import model from "../model";
-import logger from "../utils/logger";
 
 /**
  * 查询多条信息
@@ -81,7 +80,7 @@ const bulkUpdate = async (ctx, next) => {
  */
 const updateByPk = async (ctx, next) => {
   const user = await model.User.findByPk(ctx.params.id);
-  ctx.assert(user, 500, "记录不存在");
+  ctx.assert(user, 404, "记录不存在");
   ctx.body = await user.update(ctx.request.body);
 
   next();
@@ -103,7 +102,7 @@ const bulkDestroy = async (ctx, next) => {
  */
 const destroyByPk = async (ctx, next) => {
   const user = await model.User.findByPk(ctx.params.id);
-  ctx.assert(user, 500, "记录不存在");
+  ctx.assert(user, 404, "记录不存在");
   ctx.body = await user.destroy();
 
   next();
