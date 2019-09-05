@@ -7,19 +7,10 @@ import logger from "../utils/logger";
  * @param {*} next
  */
 const fetch = async (ctx, next) => {
-  try {
-    const res = await fetchTest();
-    ctx.assert(res, 500, "未获取到数据");
-    ctx.body = res;
-  } catch (err) {
-    logger.error(
-      `[查询失败] ${JSON.stringify({
-        auth: ctx.state.auth,
-        err,
-      })}`
-    );
-    ctx.throw(500, "查询失败");
-  }
+  const res = await fetchTest();
+  ctx.assert(res, 500, "未获取到数据");
+  ctx.body = res;
+
   next();
 };
 

@@ -9,40 +9,31 @@ import logger from "../utils/logger";
  * @param {*} next
  */
 const account = async (ctx, next) => {
-  try {
-    const { username: authName, password } = ctx.request.body;
+  const { username: authName, password } = ctx.request.body;
 
-    ctx.assert(authName && password, 401, "缺少参数");
+  ctx.assert(authName && password, 401, "缺少参数");
 
-    const authType = "account";
-    const authCode = sign.signPwd(authName, password);
-    const auth = await model.Auth.findOne({
-      where: { authType, authName, authCode },
-    });
+  const authType = "account";
+  const authCode = sign.signPwd(authName, password);
+  const auth = await model.Auth.findOne({
+    where: { authType, authName, authCode },
+  });
 
-    ctx.assert(auth, 401, "用户名或密码错误");
-    ctx.assert(auth.isEnabled, 401, "此帐号已禁用");
-    ctx.assert(
-      !(auth.expireTime && new Date(auth.expireTime).getTime() < Date.now()),
-      401,
-      "此帐号已过期"
-    );
+  ctx.assert(auth, 401, "用户名或密码错误");
+  ctx.assert(auth.isEnabled, 401, "此帐号已禁用");
+  ctx.assert(
+    !(auth.expireTime && new Date(auth.expireTime).getTime() < Date.now()),
+    401,
+    "此帐号已过期"
+  );
 
-    const { userId } = auth;
-    const authToken = jwt.makeToken({ authType, authName, userId });
-    ctx.body = {
-      message: "登录成功",
-      authToken,
-    };
-  } catch (err) {
-    logger.error(
-      `[登录失败] ${JSON.stringify({
-        auth: ctx.state.auth,
-        err,
-      })}`
-    );
-    ctx.throw(500, "登录失败");
-  }
+  const { userId } = auth;
+  const authToken = jwt.makeToken({ authType, authName, userId });
+  ctx.body = {
+    message: "登录成功",
+    authToken,
+  };
+
   next();
 };
 
