@@ -1,47 +1,55 @@
 import model from "../model";
 import jwt from "../utils/jwt";
 import sign from "../utils/sign";
+import logger from "../utils/logger";
 
 /**
  * 帐号密码登录
- * @param {*} ctx 
- * @param {*} next 
+ * @param {*} ctx
+ * @param {*} next
  */
 const account = async (ctx, next) => {
-  const { username: authName, password } = ctx.request.body;
-  if (!authName || !password) {
-    ctx.throw(401, "缺少参数");
-  }
+  try {
+    const { username: authName, password } = ctx.request.body;
 
-  const authType = "account";
-  const authCode = sign.signPwd(authName, password);
-  const auth = await model.Auth.findOne({
-    where: { authType, authName, authCode },
-  });
-  if (!auth) {
-    ctx.throw(401, "用户名或密码错误");
-  }
-  if (!auth.isEnabled) {
-    ctx.throw(401, "此帐号已禁用");
-  }
-  if (auth.expireTime && new Date(auth.expireTime).getTime() < Date.now()) {
-    ctx.throw(401, "此帐号已过期");
-  }
+    ctx.assert(authName && password, 401, "缺少参数");
 
-  const { userId } = auth;
-  const authToken = jwt.makeToken({ authType, authName, userId });
-  ctx.body = {
-    message: "登录成功",
-    authToken,
-  };
+    const authType = "account";
+    const authCode = sign.signPwd(authName, password);
+    const auth = await model.Auth.findOne({
+      where: { authType, authName, authCode },
+    });
 
+    ctx.assert(auth, 401, "用户名或密码错误");
+    ctx.assert(auth.isEnabled, 401, "此帐号已禁用");
+    ctx.assert(
+      !(auth.expireTime && new Date(auth.expireTime).getTime() < Date.now()),
+      401,
+      "此帐号已过期"
+    );
+
+    const { userId } = auth;
+    const authToken = jwt.makeToken({ authType, authName, userId });
+    ctx.body = {
+      message: "登录成功",
+      authToken,
+    };
+  } catch (err) {
+    logger.error(
+      `[登录失败] ${JSON.stringify({
+        auth: ctx.state.auth,
+        err,
+      })}`
+    );
+    ctx.throw(500, "登录失败");
+  }
   next();
 };
 
 /**
  * 手机登录
- * @param {*} ctx 
- * @param {*} next 
+ * @param {*} ctx
+ * @param {*} next
  */
 const phone = async (ctx, next) => {
   // ...
@@ -50,8 +58,8 @@ const phone = async (ctx, next) => {
 
 /**
  * 微信登录
- * @param {*} ctx 
- * @param {*} next 
+ * @param {*} ctx
+ * @param {*} next
  */
 const wechat = async (ctx, next) => {
   // ...

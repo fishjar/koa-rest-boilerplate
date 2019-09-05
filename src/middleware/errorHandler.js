@@ -28,7 +28,7 @@ export default () =>
 
       // 记录错误信息
       logger.error(
-        `[认证错误] ${JSON.stringify({
+        `[全局错误] ${JSON.stringify({
           auth: ctx.state.auth,
           err,
         })}`
