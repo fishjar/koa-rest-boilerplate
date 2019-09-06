@@ -7,6 +7,7 @@ const userAuth = (roles) => (ctx, next) => {
 }
 router
   .get("/test/fetch", handler.Test.fetch)
+  .post("/test/create", handler.Test.createAuth)
 
   .get("/user", handler.User.findOne)                 // 根据条件查找单条
   .post("/user", handler.User.findOrCreate)           // 查找或创建单条

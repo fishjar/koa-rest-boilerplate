@@ -28,6 +28,8 @@ const { NODE_PORT, DEFAULT_USERNAME, DEFAULT_PASSWORD } = config;
       // 创建测试用户
       const jack = await model.User.create({ name: "jack" });
       const rose = await model.User.create({ name: "rose" });
+      const deluser = await model.User.create({ name: "deluser" });
+      await deluser.destroy();
 
       // 创建角色
       const userRole = await model.Role.create({ name: "user" });
