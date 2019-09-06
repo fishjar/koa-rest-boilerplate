@@ -78,10 +78,18 @@ const User = sequelize.define(
         isFloat: true,
       },
     },
+    bloodType: {
+      field: "blood_type",
+      comment: "血型(ABO)",
+      type: Sequelize.STRING(8),
+      validate: {
+        isIn: [["A","B","AB","O","NULL"]],
+      },
+    },
     intro: {
       field: "intro",
       comment: "简介",
-      type: Sequelize.TEXT,
+      type: Sequelize.TEXT, // RichText
     },
     notice: {
       field: "notice",
@@ -92,6 +100,21 @@ const User = sequelize.define(
       field: "address",
       comment: "地址",
       type: Sequelize.JSON, // {province,city}
+    },
+    lives: {
+      field: "lives",
+      comment: "生活地点",
+      type: Sequelize.JSON, // [{province,city}]
+    },
+    labels: {
+      field: "labels",
+      comment: "标签",
+      type: Sequelize.JSON, // ["string"]
+    },
+    luckyNumbers: {
+      field: "lucky_numbers",
+      comment: "幸运数字",
+      type: Sequelize.JSON, // [1,2]
     },
     score: {
       field: "score",

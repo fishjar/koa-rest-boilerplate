@@ -11,32 +11,23 @@ const findAndCountAll = async (ctx, next) => {
   } else if (sorter) {
     order = [sorter.split("__")];
   }
-  const { count, rows } = await model.User.findAndCountAll({
+  const { count, rows } = await model.Role.findAndCountAll({
     where,
     offset: (page_num - 1) * page_size,
     limit: page_size,
     order,
     include: [
       {
-        model: model.Auth,
-        as: "auths",
-        // include: [
-        //   {
-        //     model: model.User,
-        //   },
-        // ],
+        model: model.Role,
+        as: "parent",
       },
       {
         model: model.Role,
-        as: "roles",
+        as: "child",
       },
       {
         model: model.User,
-        as: "friends",
-      },
-      {
-        model: model.Group,
-        as: "groups",
+        as: "users",
       },
     ],
   });
@@ -49,10 +40,13 @@ const findAndCountAll = async (ctx, next) => {
  * 根据主键查询单条信息
  */
 const findByPk = async (ctx, next) => {
-  const user = await model.User.findByPk(ctx.params.id);
-  ctx.assert(user, 404, "记录不存在");
-  const auths = await user.getAuths();
-  ctx.body = { ...user.get({ plain: true }), auths };
+  const role = await model.Role.findByPk(ctx.params.id);
+  ctx.assert(role, 404, "记录不存在");
+  const parent = await role.getParent();
+  const child = await role.getChild();
+
+  ctx.body = { ...role.get({ plain: true }), parent, child };
+
   next();
 };
 
@@ -60,7 +54,7 @@ const findByPk = async (ctx, next) => {
  * 创建单条信息
  */
 const singleCreate = async (ctx, next) => {
-  ctx.body = await model.User.create(ctx.request.body);
+  ctx.body = await model.Role.create(ctx.request.body);
 
   next();
 };
@@ -69,7 +63,7 @@ const singleCreate = async (ctx, next) => {
  * 创建多条信息
  */
 const bulkCreate = async (ctx, next) => {
-  ctx.body = await model.User.bulkCreate(ctx.request.body, {
+  ctx.body = await model.Role.bulkCreate(ctx.request.body, {
     validate: true,
   });
 
@@ -80,7 +74,7 @@ const bulkCreate = async (ctx, next) => {
  * 更新多条信息
  */
 const bulkUpdate = async (ctx, next) => {
-  ctx.body = await model.User.update(ctx.request.body.fields, {
+  ctx.body = await model.Role.update(ctx.request.body.fields, {
     where: ctx.request.body.filter,
   });
 
@@ -91,9 +85,9 @@ const bulkUpdate = async (ctx, next) => {
  * 更新单条信息
  */
 const updateByPk = async (ctx, next) => {
-  const user = await model.User.findByPk(ctx.params.id);
-  ctx.assert(user, 404, "记录不存在");
-  ctx.body = await user.update(ctx.request.body);
+  const role = await model.Role.findByPk(ctx.params.id);
+  ctx.assert(role, 404, "记录不存在");
+  ctx.body = await role.update(ctx.request.body);
 
   next();
 };
@@ -102,7 +96,7 @@ const updateByPk = async (ctx, next) => {
  * 删除多条信息
  */
 const bulkDestroy = async (ctx, next) => {
-  ctx.body = await model.User.destroy({
+  ctx.body = await model.Role.destroy({
     where: ctx.request.body,
   });
 
@@ -113,9 +107,9 @@ const bulkDestroy = async (ctx, next) => {
  * 删除单条信息
  */
 const destroyByPk = async (ctx, next) => {
-  const user = await model.User.findByPk(ctx.params.id);
-  ctx.assert(user, 404, "记录不存在");
-  ctx.body = await user.destroy();
+  const role = await model.Role.findByPk(ctx.params.id);
+  ctx.assert(role, 404, "记录不存在");
+  ctx.body = await role.destroy();
 
   next();
 };
@@ -124,10 +118,12 @@ const destroyByPk = async (ctx, next) => {
  * 查询单条信息
  */
 const findOne = async (ctx, next) => {
-  const user = await model.User.findOne({ where: ctx.query });
-  ctx.assert(user, 404, "记录不存在");
-  const auths = user.getAuths();
-  ctx.body = { ...user.get({ plain: true }), auths };
+  const role = await model.Role.findOne({ where: ctx.query });
+  ctx.assert(role, 404, "记录不存在");
+  const parent = await role.getParent();
+  const child = await role.getChild();
+
+  ctx.body = { ...role.get({ plain: true }), parent, child };
 
   next();
 };
@@ -136,12 +132,12 @@ const findOne = async (ctx, next) => {
  * 查询或创建单条信息
  */
 const findOrCreate = async (ctx, next) => {
-  const [user, created] = await model.User.findOrCreate({
+  const [role, created] = await model.Role.findOrCreate({
     where: ctx.request.body,
   });
   ctx.body = {
-    // ...user.toJSON(),
-    ...user.get({ plain: true }),
+    // ...role.toJSON(),
+    ...role.get({ plain: true }),
     created,
   };
 

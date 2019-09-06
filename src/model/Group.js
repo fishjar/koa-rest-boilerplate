@@ -1,8 +1,8 @@
 import Sequelize from "sequelize";
 import sequelize from "../db";
 
-const Role = sequelize.define(
-  "role",
+const Group = sequelize.define(
+  "group",
   {
     id: {
       field: "id",
@@ -11,14 +11,9 @@ const Role = sequelize.define(
       defaultValue: Sequelize.UUIDV4,
       primaryKey: true,
     },
-    parentId: {
-      field: "parent_id",
-      comment: "父ID",
-      type: Sequelize.UUID,
-    },
     name: {
       field: "name",
-      comment: "角色名称",
+      comment: "团队名称",
       type: Sequelize.STRING(32),
       allowNull: false,
       validate: {
@@ -31,8 +26,8 @@ const Role = sequelize.define(
     underscored: true, // 使用下划线字段
     paranoid: true, // 软删除
     freezeTableName: true, // 禁用表名自动复数
-    tableName: "role", // 定义表的名称
+    tableName: "group", // 定义表的名称
   }
 );
 
-export default Role;
+export default Group;

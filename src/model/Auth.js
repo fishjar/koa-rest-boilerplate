@@ -12,16 +12,16 @@ const Auth = sequelize.define(
       defaultValue: Sequelize.UUIDV4,
       primaryKey: true,
     },
-    // userId: {
-    //   field: "user_id",
-    //   comment: "用户ID",
-    //   type: Sequelize.UUID,
-    //   allowNull: false,
-    //   references: {
-    //     model: User,
-    //     key: "id",
-    //   },
-    // },
+    userId: {
+      field: "user_id",
+      comment: "用户ID",
+      type: Sequelize.UUID,
+      allowNull: false,
+      references: {
+        model: User,
+        key: "id",
+      },
+    },
     authType: {
       field: "auth_type",
       comment: "鉴权类型",
