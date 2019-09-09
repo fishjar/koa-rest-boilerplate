@@ -15,8 +15,12 @@ const fetch = async (ctx, next) => {
   next();
 };
 
+/**
+ * 测试事务
+ * @param {*} ctx
+ * @param {*} next
+ */
 const createAuth = async (ctx, next) => {
-  // 测试事务
   const t = await sequelize.transaction();
   const user = await model.User.create(
     { name: "testname" },
@@ -35,7 +39,19 @@ const createAuth = async (ctx, next) => {
   next();
 };
 
+const queryRaw = async (ctx, next) => {
+  const res = await sequelize.query("SELECT * FROM `user`", {
+    // type: sequelize.QueryTypes.SELECT,
+    model: model.User,
+    mapToModel: true,
+  });
+  ctx.body = res;
+
+  next();
+};
+
 export default {
   fetch,
   createAuth,
+  queryRaw,
 };

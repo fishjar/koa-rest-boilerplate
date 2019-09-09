@@ -52,7 +52,8 @@ const findByPk = async (ctx, next) => {
   const user = await model.User.findByPk(ctx.params.id);
   ctx.assert(user, 404, "记录不存在");
   const auths = await user.getAuths();
-  ctx.body = { ...user.get({ plain: true }), auths };
+  const roles = await user.getRoles();
+  ctx.body = { ...user.get({ plain: true }), auths, roles };
   next();
 };
 
@@ -127,7 +128,8 @@ const findOne = async (ctx, next) => {
   const user = await model.User.findOne({ where: ctx.query });
   ctx.assert(user, 404, "记录不存在");
   const auths = await user.getAuths();
-  ctx.body = { ...user.get({ plain: true }), auths };
+  const roles = await user.getRoles();
+  ctx.body = { ...user.get({ plain: true }), auths, roles };
 
   next();
 };

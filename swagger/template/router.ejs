@@ -3,10 +3,29 @@ import handler from "../handler";
 
 const router = new Router();
 
+/**
+ * 角色权限中间件
+ * @param {Array} roles 
+ */
+const roleAuth = (roles = []) => (ctx, next) => {
+  roles.forEach(role => {
+    ctx.assert(
+      ctx.state &&
+        ctx.state.user &&
+        ctx.state.user.roles &&
+        Array.isArray(ctx.state.user.roles) &&
+        ctx.state.user.roles.includes(role),
+      401,
+      "缺少角色权限"
+    );
+  });
+  return next();
+};
+
 router
   <% Object.entries(definitions)
     .filter(([_,model])=>model['x-isModel'])
-    .forEach(([modelKey,model]) => { 
+    .forEach(([modelKey,model]) => {
     const modelKeyLower = modelKey.toLowerCase();
     const modelKeyPlural = model["x-plural"].toLowerCase();
   -%>
@@ -53,6 +72,6 @@ router
 
   <% }) -%>
 
-  .post("/account/login", handler.Account.login);
+  .post("/login/account", handler.Login.account);      // 帐号密码登录
 
 export default router;

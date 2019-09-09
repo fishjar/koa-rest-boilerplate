@@ -18,7 +18,7 @@ export default () =>
       // 记录response信息
       logger.info(
         `[返回信息] ${JSON.stringify({
-          auth: ctx.state.auth,
+          auth: ctx.state.user,
           body: ctx.body,
         })}`
       );
@@ -26,7 +26,7 @@ export default () =>
       // 记录错误信息
       logger.error(
         `[全局错误] ${JSON.stringify({
-          auth: ctx.state.auth,
+          auth: ctx.state.user,
           err: err.toJSON ? err.toJSON() : err,
         })}`
       );

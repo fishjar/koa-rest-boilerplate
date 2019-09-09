@@ -7,9 +7,10 @@ const { JWT_SECRET, JWT_EXPIRES_IN } = config;
  * 加密令牌
  * @param {string} authType 鉴权类型
  * @param {string} authName 鉴权名称
- * @param {userId} authName 用户ID
+ * @param {UUID} authName 用户ID
+ * @param {Array} roles 用户角色
  */
-const makeToken = ({ authType, authName, userId }) => {
+const makeToken = ({ authType, authName, userId, roles = [] }) => {
   if (!authType || !authName || !userId) {
     return "";
   }
@@ -18,6 +19,7 @@ const makeToken = ({ authType, authName, userId }) => {
       authType,
       authName,
       userId,
+      roles,
     },
     JWT_SECRET,
     { expiresIn: JWT_EXPIRES_IN }
