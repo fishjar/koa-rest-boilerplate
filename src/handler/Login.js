@@ -42,6 +42,10 @@ const account = async (ctx, next) => {
   ctx.body = {
     message: "登录成功",
     authToken,
+    user: {
+      name: user.name,
+    },
+    roles: roles.map(role => role.name),
   };
 
   next();

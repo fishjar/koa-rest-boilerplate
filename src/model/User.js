@@ -86,15 +86,15 @@ const User = sequelize.define(
         isIn: [["A","B","AB","O","NULL"]],
       },
     },
-    intro: {
-      field: "intro",
-      comment: "简介",
-      type: Sequelize.TEXT, // RichText
-    },
     notice: {
       field: "notice",
       comment: "备注",
       type: Sequelize.TEXT,
+    },
+    intro: {
+      field: "intro",
+      comment: "简介",
+      type: Sequelize.TEXT, // RichText
     },
     address: {
       field: "address",
@@ -103,8 +103,8 @@ const User = sequelize.define(
     },
     lives: {
       field: "lives",
-      comment: "生活地点",
-      type: Sequelize.JSON, // [{province,city}]
+      comment: "生活轨迹",
+      type: Sequelize.JSON, // [{x,y}]
     },
     labels: {
       field: "labels",
@@ -131,8 +131,8 @@ const User = sequelize.define(
         },
       },
     },
-    no: {
-      field: "no",
+    userNo: {
+      field: "user_no",
       comment: "编号",
       type: Sequelize.INTEGER,
       autoIncrement: true, // slqlite 无效？
