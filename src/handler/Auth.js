@@ -28,6 +28,7 @@ const findAndCountAll = async (ctx, next) => {
         // ],
       },
     ],
+    distinct: true,
   });
   ctx.body = { count, rows };
 

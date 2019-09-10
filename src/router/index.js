@@ -16,7 +16,7 @@ const roleAuth = (roles = []) => (ctx, next) => {
         Array.isArray(ctx.state.user.roles) &&
         ctx.state.user.roles.includes(role),
       401,
-      "缺少角色权限"
+      "角色缺少权限"
     );
   });
   return next();

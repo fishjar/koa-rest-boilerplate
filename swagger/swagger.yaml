@@ -1,4 +1,3 @@
----
 swagger: "2.0"
 info:
   version: "0.1.0"
@@ -307,7 +306,7 @@ definitions:
         type: "string"
         format: "uuid"
         description: "用户ID"
-        example: "fc3c286e-78b3-490b-be6a-79a6069fd68e"
+        example: "cc1aca88-feae-4dad-b906-cad6d50e16de"
         x-fieldName: "user_id"
       authType:
         type: "string"
@@ -377,13 +376,162 @@ definitions:
         x-showFilter: true
     example:
       id: "fc3c286e-78b3-490b-be6a-79a6069fd68e"
-      userId: "fc3c286e-78b3-490b-be6a-79a6069fd68e"
+      userId: "cc1aca88-feae-4dad-b906-cad6d50e16de"
       authType: "account"
       authName: "gabe"
       authCode: "******"
       verifyTime: "2012-12-12 12:12:12"
       expireTime: "2013-12-12 12:12:12"
       isEnabled: true
+  Role:
+    type: "object"
+    description: "角色模型"
+    x-isModel: true
+    x-plural: "Roles"
+    x-tableName: "role"
+    x-apis:
+      - "findAndCountAll"
+      - "findByPk"
+      - "singleCreate"
+      - "bulkCreate"
+      - "bulkUpdate"
+      - "updateByPk"
+      - "bulkDestroy"
+      - "destroyByPk"
+      - "findOne"
+      - "findOrCreate"
+    required:
+      - "id"
+      - "name"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+        description: "ID"
+        uniqueItems: true
+        example: "fc3c286e-78b3-490b-be6a-79a6069fd68e"
+        x-fieldName: "id"
+        x-primaryKey: true
+      parentId:
+        type: "string"
+        format: "uuid"
+        description: "父ID"
+        example: "cc1aca88-feae-4dad-b906-cad6d50e16de"
+        x-fieldName: "parent_id"
+      name:
+        type: "string"
+        format: "string"
+        description: "角色名"
+        example: "admin"
+        minLength: 3
+        maxLength: 20
+        x-fieldName: "name"
+        x-message: "请输入"
+        x-showTable: true
+        x-length: 32
+    example:
+      id: "fc3c286e-78b3-490b-be6a-79a6069fd68e"
+      parentId: "cc1aca88-feae-4dad-b906-cad6d50e16de"
+      name: "admin"
+  Group:
+    type: "object"
+    description: "组模型"
+    x-isModel: true
+    x-plural: "Groups"
+    x-tableName: "group"
+    x-apis:
+      - "findAndCountAll"
+      - "findByPk"
+      - "singleCreate"
+      - "bulkCreate"
+      - "bulkUpdate"
+      - "updateByPk"
+      - "bulkDestroy"
+      - "destroyByPk"
+      - "findOne"
+      - "findOrCreate"
+    required:
+      - "id"
+      - "name"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+        description: "ID"
+        uniqueItems: true
+        example: "fc3c286e-78b3-490b-be6a-79a6069fd68e"
+        x-fieldName: "id"
+        x-primaryKey: true
+      name:
+        type: "string"
+        format: "string"
+        description: "角色名"
+        example: "admin"
+        minLength: 3
+        maxLength: 20
+        x-fieldName: "name"
+        x-message: "请输入"
+        x-showTable: true
+        x-length: 32
+    example:
+      id: "fc3c286e-78b3-490b-be6a-79a6069fd68e"
+      name: "titanic"
+  UserGroup:
+    type: "object"
+    description: "用户-组模型"
+    x-isModel: true
+    x-plural: "UserGroups"
+    x-tableName: "usergroup"
+    x-apis:
+      - "findAndCountAll"
+    required:
+      - "id"
+      - "userId"
+      - "groupId"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+        description: "ID"
+        uniqueItems: true
+        example: "fc3c286e-78b3-490b-be6a-79a6069fd68e"
+        x-fieldName: "id"
+        x-primaryKey: true
+      userId:
+        type: "string"
+        format: "uuid"
+        description: "用户ID"
+        example: "cc1aca88-feae-4dad-b906-cad6d50e16de"
+        x-fieldName: "user_id"
+        x-showTable: true
+      groupId:
+        type: "string"
+        format: "uuid"
+        description: "组ID"
+        example: "cc1aca88-feae-4dad-b906-cad6d50e16de"
+        x-fieldName: "group_id"
+        x-showTable: true
+      level:
+        type: "integer"
+        format: "int4"
+        description: "级别"
+        default: 0
+        x-fieldName: "level"
+        x-message: "请输入"
+        x-showTable: true
+        x-showSorter: true
+      joinTime:
+        type: "string"
+        format: "date-time"
+        description: "加入时间"
+        x-fieldName: "join_time"
+        x-message: "请选择"
+    example:
+      id: "fc3c286e-78b3-490b-be6a-79a6069fd68e"
+      userId: "6b0fba36-764e-43a6-a7f1-767e62ccb47b"
+      groupId: "a91fb15b-2419-4e7d-ab0a-910fc338cd61"
+      level: 0
+      joinTime: "2012-12-12 12:12:12"
   LoginBody:
     type: "object"
     description: "登录参数模型"

@@ -39,6 +39,7 @@ const findAndCountAll = async (ctx, next) => {
         as: "groups",
       },
     ],
+    distinct: true,
   });
   ctx.body = { count, rows };
 

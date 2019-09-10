@@ -30,6 +30,7 @@ const findAndCountAll = async (ctx, next) => {
         as: "users",
       },
     ],
+    distinct: true,
   });
   ctx.body = { count, rows };
 

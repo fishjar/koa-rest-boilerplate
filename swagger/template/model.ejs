@@ -37,7 +37,7 @@ const <%- modelKey -%> = sequelize.define(
         type: Sequelize.<%- dataFormats[field.format][0] -%>,
         <% } -%>
 
-        <% if (field.format==='uuid') { %>
+        <% if (field.format==='uuid' && field['x-primaryKey']) { %>
         defaultValue: Sequelize.UUIDV4,
         <% } else if (field.default){ %>
         defaultValue: <%- field.default -%>,

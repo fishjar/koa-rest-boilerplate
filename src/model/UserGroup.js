@@ -11,6 +11,18 @@ const UserGroup = sequelize.define(
       defaultValue: Sequelize.UUIDV4,
       primaryKey: true,
     },
+    userId: {
+      field: "user_id",
+      comment: "用户ID",
+      type: Sequelize.UUID,
+      allowNull: false,
+    },
+    groupId: {
+      field: "group_id",
+      comment: "组ID",
+      type: Sequelize.UUID,
+      allowNull: false,
+    },
     level: {
       field: "level",
       comment: "级别",

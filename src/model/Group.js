@@ -13,7 +13,7 @@ const Group = sequelize.define(
     },
     name: {
       field: "name",
-      comment: "团队名称",
+      comment: "组名称",
       type: Sequelize.STRING(32),
       allowNull: false,
       validate: {
