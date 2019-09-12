@@ -57,18 +57,18 @@ export default async () => {
     // await user.addFriend(rose);
     // await jack.addFriend(rose);
 
-    // // 创建测试鉴权
-    // await model.Auth.create({
-    //   userId: jack.id,
-    //   authType: "account",
-    //   authName: jack.name,
-    //   authCode: sign.signPwd(jack.name, DEFAULT_PASSWORD),
-    //   verifyTime: new Date(),
-    //   expireTime: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
-    // });
-    // console.log("\n测试帐号");
-    // console.log(`username: ${jack.name}`);
-    // console.log(`password: ${DEFAULT_PASSWORD}\n`);
+    // 创建测试鉴权
+    await model.Auth.create({
+      userId: jack.id,
+      authType: "account",
+      authName: jack.name,
+      authCode: sign.signPwd(jack.name, DEFAULT_PASSWORD),
+      verifyTime: new Date(),
+      expireTime: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+    });
+    console.log("\n测试帐号");
+    console.log(`username: ${jack.name}`);
+    console.log(`password: ${DEFAULT_PASSWORD}\n`);
 
     // 创建默认鉴权
     await model.Auth.create({
