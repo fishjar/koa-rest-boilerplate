@@ -23,5 +23,11 @@
       "ejsFile": "swagger/template/handler.ejs",
       "outFile": "src/handler/*.js"
     }
+  ],
+  "replaceFiles": [
+    {
+      "placeFile": "swagger/replace/initData.js",
+      "outFile": "src/utils/initData.js"
+    }
   ]
 }
