@@ -14,7 +14,7 @@ const findAndCountAll = async (ctx, next) => {
   const { count, rows } = await model.Auth.findAndCountAll({
     where,
     offset: (pageNum - 1) * pageSize,
-    limit: pageSize,
+    limit: pageSize > 0 ? pageSize : null,
     order,
     attributes: { exclude: ["authCode"] },
     include: [

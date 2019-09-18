@@ -14,7 +14,7 @@ const findAndCountAll = async (ctx, next) => {
   const { count, rows } = await model.Group.findAndCountAll({
     where,
     offset: (pageNum - 1) * pageSize,
-    limit: pageSize,
+    limit: pageSize > 0 ? pageSize : null,
     order,
     include: [
       {

@@ -84,23 +84,37 @@ export default async () => {
     });
 
     // 关联角色菜单
-    await adminRole.addMenu(dashboardMenu);
-    await adminRole.addMenu(welcomeMenu);
-    await adminRole.addMenu(usersMenu);
-    await adminRole.addMenu(authsMenu);
-    await adminRole.addMenu(rolesMenu);
-    await adminRole.addMenu(groupsMenu);
-    await adminRole.addMenu(menusMenu);
-    await adminRole.addMenu(usergroupsMenu);
-    await userRole.addMenu(welcomeMenu);
+    // await adminRole.addMenu(dashboardMenu);
+    // await adminRole.addMenu(welcomeMenu);
+    // await adminRole.addMenu(usersMenu);
+    // await adminRole.addMenu(authsMenu);
+    // await adminRole.addMenu(rolesMenu);
+    // await adminRole.addMenu(groupsMenu);
+    // await adminRole.addMenu(menusMenu);
+    // await adminRole.addMenu(usergroupsMenu);
+    // await userRole.addMenu(welcomeMenu);
+    await adminRole.setMenus([
+      welcomeMenu,
+      dashboardMenu,
+      usersMenu,
+      authsMenu,
+      rolesMenu,
+      groupsMenu,
+      menusMenu,
+      usergroupsMenu,
+    ]);
+    await userRole.setMenus([welcomeMenu]);
 
     // 关联用户角色
-    await user.addRole(userRole);
-    await user.addRole(adminRole);
-    await user.addRole(guestRole);
-    await jack.addRole(userRole);
-    await jack.addRole(guestRole);
-    await rose.addRole(guestRole);
+    // await user.addRole(userRole);
+    // await user.addRole(adminRole);
+    // await user.addRole(guestRole);
+    // await jack.addRole(userRole);
+    // await jack.addRole(guestRole);
+    // await rose.addRole(guestRole);
+    await user.setRoles([guestRole, userRole, adminRole]);
+    await jack.setRoles([guestRole, userRole]);
+    await rose.setRoles([guestRole]);
 
     // 关联用户团队
     await user.addGroup(rayjarGroup, {

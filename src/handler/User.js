@@ -15,7 +15,7 @@ const findAndCountAll = async (ctx, next) => {
   const { count, rows } = await model.User.findAndCountAll({
     where,
     offset: (pageNum - 1) * pageSize,
-    limit: pageSize,
+    limit: pageSize > 0 ? pageSize : null,
     order,
     include: [
       {
@@ -102,7 +102,13 @@ const bulkUpdate = async (ctx, next) => {
 const updateByPk = async (ctx, next) => {
   const user = await model.User.findByPk(ctx.params.id);
   ctx.assert(user, 404, "记录不存在");
-  ctx.body = await user.update(ctx.request.body);
+  const { roleIds, ...data } = ctx.request.body;
+  ctx.body = await user.update(data);
+  if (Array.isArray(roleIds)) {
+    await user.setRoles(
+      roleIds.map(async item => await model.Role.findByPk(item))
+    );
+  }
 
   await next();
 };
