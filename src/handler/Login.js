@@ -8,45 +8,94 @@ import logger from "../utils/logger";
  * @param {*} ctx
  * @param {*} next
  */
+// const account = async (ctx, next) => {
+//   const { username: authName, password } = ctx.request.body;
+
+//   ctx.assert(authName && password, 401, "缺少参数");
+
+//   const authType = "account";
+//   const authCode = sign.signPwd(authName, password);
+//   const auth = await model.Auth.findOne({
+//     where: { authType, authName, authCode },
+//   });
+
+//   ctx.assert(auth, 401, "用户名或密码错误");
+//   ctx.assert(auth.isEnabled, 401, "此帐号已禁用");
+//   ctx.assert(
+//     !(auth.expireTime && new Date(auth.expireTime).getTime() < Date.now()),
+//     401,
+//     "此帐号已过期"
+//   );
+
+//   const { userId } = auth;
+//   const authToken = jwt.makeToken({
+//     authType,
+//     authName,
+//     userId,
+//   });
+//   const user = await model.User.findByPk(userId);
+//   ctx.assert(auth, 401, "用户不存在");
+//   let roles = ["guest"];
+//   try {
+//     roles = await user.getRoles();
+//   } catch (err) {
+//     logger.error("查找用户角色错误");
+//   }
+
+//   ctx.body = {
+//     message: "登录成功",
+//     authToken,
+//     roles: roles.map(role => role.name),
+//   };
+
+//   await next();
+// };
 const account = async (ctx, next) => {
-  const { username: authName, password } = ctx.request.body;
-
-  ctx.assert(authName && password, 401, "缺少参数");
-
-  const authType = "account";
-  const authCode = sign.signPwd(authName, password);
-  const auth = await model.Auth.findOne({
-    where: { authType, authName, authCode },
-  });
-
-  ctx.assert(auth, 401, "用户名或密码错误");
-  ctx.assert(auth.isEnabled, 401, "此帐号已禁用");
-  ctx.assert(
-    !(auth.expireTime && new Date(auth.expireTime).getTime() < Date.now()),
-    401,
-    "此帐号已过期"
-  );
-
-  const { userId } = auth;
-  const authToken = jwt.makeToken({
-    authType,
-    authName,
-    userId,
-  });
-  const user = await model.User.findByPk(userId);
-  ctx.assert(auth, 401, "用户不存在");
-  let roles = ["guest"];
   try {
-    roles = await user.getRoles();
-  } catch (err) {
-    logger.error("查找用户角色错误");
-  }
+    const { userName: authName, password } = ctx.request.body;
 
-  ctx.body = {
-    message: "登录成功",
-    authToken,
-    roles: roles.map(role => role.name),
-  };
+    ctx.assert(authName && password, 401, "缺少参数");
+
+    const authType = "account";
+    const authCode = sign.signPwd(authName, password);
+    const auth = await model.Auth.findOne({
+      where: { authType, authName, authCode },
+    });
+
+    ctx.assert(auth, 401, "用户名或密码错误");
+    ctx.assert(auth.isEnabled, 401, "此帐号已禁用");
+    ctx.assert(
+      !(auth.expireTime && new Date(auth.expireTime).getTime() < Date.now()),
+      401,
+      "此帐号已过期"
+    );
+
+    const { userId } = auth;
+    const authToken = jwt.makeToken({
+      authType,
+      authName,
+      userId,
+    });
+    const user = await model.User.findByPk(userId);
+    ctx.assert(auth, 401, "用户不存在");
+
+    const roles = await user.getRoles();
+
+    ctx.body = {
+      status: "ok",
+      type: "account",
+      message: "登录成功",
+      authToken,
+      currentAuthority: roles.map(role => role.name),
+    };
+  } catch (err) {
+    ctx.body = {
+      status: "error",
+      type: "account",
+      message: err.message || "登录失败",
+      currentAuthority: ["guest"],
+    };
+  }
 
   await next();
 };

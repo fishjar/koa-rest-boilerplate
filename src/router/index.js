@@ -9,7 +9,8 @@ router
   .post("/test/create", handler.Test.createAuth)
   .get("/test/raw", handler.Test.queryRaw)
 
-  .get("/user/menus", roleAuth(["user"]), handler.User.findUserMenus) // 根据条件查找单条
+  .get("/user/menus", roleAuth(["user"]), handler.User.findUserMenus)
+  .get("/user/current", roleAuth(["user"]), handler.User.findCurrentUser)
   .get("/user", roleAuth(["user"]), handler.User.findOne) // 根据条件查找单条
   .post("/user", roleAuth(["user"]), handler.User.findOrCreate) // 查找或创建单条
   .get("/users", roleAuth(["user"]), handler.User.findAndCountAll) // 获取多条

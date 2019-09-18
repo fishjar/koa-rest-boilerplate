@@ -15,6 +15,7 @@ export const formatMenus = (menus, parentId, roleId) =>
       name,
       icon,
       sort,
+      roles: roles.map(role => role.name),
       checked: roles.map(role => role.id).includes(roleId),
       children: formatMenus(menus, id, roleId),
     }));

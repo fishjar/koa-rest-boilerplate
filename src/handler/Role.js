@@ -66,9 +66,9 @@ const bulkCreate = async (ctx, next) => {
  * 更新多条信息
  */
 const bulkUpdate = async (ctx, next) => {
-  ctx.body = await model.Role.update(ctx.request.body.fields, {
-    where: ctx.request.body.filter,
-  });
+  const { id } = ctx.query;
+  ctx.assert(id, 400, "参数有误");
+  ctx.body = await model.Role.update(ctx.request.body, { where: { id } });
 
   await next();
 };
@@ -88,9 +88,9 @@ const updateByPk = async (ctx, next) => {
  * 删除多条信息
  */
 const bulkDestroy = async (ctx, next) => {
-  ctx.body = await model.Role.destroy({
-    where: ctx.request.body,
-  });
+  const { id } = ctx.query;
+  ctx.assert(id, 400, "参数有误");
+  ctx.body = await model.Role.destroy({ where: { id } });
 
   await next();
 };

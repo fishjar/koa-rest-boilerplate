@@ -89,9 +89,9 @@ const bulkCreate = async (ctx, next) => {
  * 更新多条信息
  */
 const bulkUpdate = async (ctx, next) => {
-  ctx.body = await model.User.update(ctx.request.body.fields, {
-    where: ctx.request.body.filter,
-  });
+  const { id } = ctx.query;
+  ctx.assert(id, 400, "参数有误");
+  ctx.body = await model.User.update(ctx.request.body, { where: { id } });
 
   await next();
 };
@@ -111,9 +111,9 @@ const updateByPk = async (ctx, next) => {
  * 删除多条信息
  */
 const bulkDestroy = async (ctx, next) => {
-  ctx.body = await model.User.destroy({
-    where: ctx.request.body,
-  });
+  const { id } = ctx.query;
+  ctx.assert(id, 400, "参数有误");
+  ctx.body = await model.User.destroy({ where: { id } });
 
   await next();
 };
@@ -180,12 +180,12 @@ const findUserMenus = async (ctx, next) => {
       {
         model: model.Menu,
         as: "menus",
-        // include: [
-        //   {
-        //     model: model.Role,
-        //     as: "roles",
-        //   },
-        // ],
+        include: [
+          {
+            model: model.Role,
+            as: "roles",
+          },
+        ],
       },
     ],
   });
@@ -206,6 +206,16 @@ const findUserMenus = async (ctx, next) => {
   await next();
 };
 
+const findCurrentUser = async (ctx, next) => {
+  const { userId } = ctx.state.user;
+  ctx.assert(userId, 401, "请先登录");
+  const user = await model.User.findByPk(userId);
+  ctx.assert(user, 404, "用户不存在");
+  ctx.body = user;
+
+  await next();
+};
+
 export default {
   findAndCountAll,
   findByPk,
@@ -218,4 +228,5 @@ export default {
   findOne,
   findOrCreate,
   findUserMenus,
+  findCurrentUser,
 };
