@@ -57,11 +57,16 @@ const findAndCountAll = async (ctx, next) => {
  * 根据主键查询单条信息
  */
 const findByPk = async (ctx, next) => {
-  const user = await model.User.findByPk(ctx.params.id);
+  const user = await model.User.findByPk(ctx.params.id, {
+    include: [
+      {
+        model: model.Role,
+        as: "roles",
+      },
+    ],
+  });
   ctx.assert(user, 404, "记录不存在");
-  const auths = await user.getAuths();
-  const roles = await user.getRoles();
-  ctx.body = { ...user.get({ plain: true }), auths, roles };
+  ctx.body = user;
   await next();
 };
 
@@ -177,31 +182,42 @@ const findOrCreate = async (ctx, next) => {
 };
 
 const findUserMenus = async (ctx, next) => {
-  const { userId } = ctx.state.user;
-  ctx.assert(userId, 401, "请先登录");
-  const user = await model.User.findByPk(userId);
-  ctx.assert(user, 404, "用户不存在");
-  const roles = await user.getRoles({
+  const { authId } = ctx.state.user;
+  const auth = await model.Auth.findByPk(authId, {
     include: [
       {
-        model: model.Menu,
-        as: "menus",
+        model: model.User,
+        as: "user",
         include: [
           {
             model: model.Role,
             as: "roles",
+            include: [
+              {
+                model: model.Menu,
+                as: "menus",
+                include: [
+                  {
+                    model: model.Role,
+                    as: "roles",
+                  },
+                ],
+              },
+            ],
           },
         ],
       },
     ],
   });
+
   const menusMap = {};
-  roles.forEach(role => {
+  auth.user.roles.forEach(role => {
     role.menus.forEach(menu => {
       menusMap[menu.id] = menu;
     });
   });
   const menus = Object.entries(menusMap).map(([_, item]) => item);
+
   const { format } = ctx.query;
   if (format) {
     ctx.body = formatMenus(menus, null);
@@ -213,11 +229,16 @@ const findUserMenus = async (ctx, next) => {
 };
 
 const findCurrentUser = async (ctx, next) => {
-  const { userId } = ctx.state.user;
-  ctx.assert(userId, 401, "请先登录");
-  const user = await model.User.findByPk(userId);
-  ctx.assert(user, 404, "用户不存在");
-  ctx.body = user;
+  const { authId } = ctx.state.user;
+  const auth = await model.Auth.findByPk(authId, {
+    include: [
+      {
+        model: model.User,
+        as: "user",
+      },
+    ],
+  });
+  ctx.body = auth.user;
 
   await next();
 };

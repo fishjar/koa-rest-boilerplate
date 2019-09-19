@@ -67,6 +67,17 @@ router
   .delete("/menus/:id", roleAuth(["admin"]), handler.Menu.destroyByPk) // 删除单条
   .post("/menus/multiple", roleAuth(["admin"]), handler.Menu.bulkCreate) // 创建多条
 
+  .get("/usergroup", roleAuth(["admin"]), handler.UserGroup.findOne) // 根据条件查找单条
+  .post("/usergroup", roleAuth(["admin"]), handler.UserGroup.findOrCreate) // 查找或创建单条
+  .get("/usergroups", roleAuth(["admin"]), handler.UserGroup.findAndCountAll) // 获取多条
+  .post("/usergroups", roleAuth(["admin"]), handler.UserGroup.singleCreate) // 创建单条
+  .patch("/usergroups", roleAuth(["admin"]), handler.UserGroup.bulkUpdate) // 更新多条
+  .delete("/usergroups", roleAuth(["admin"]), handler.UserGroup.bulkDestroy) // 删除多条
+  .get("/usergroups/:id", roleAuth(["admin"]), handler.UserGroup.findByPk) // 根据主键查找单条
+  .patch("/usergroups/:id", roleAuth(["admin"]), handler.UserGroup.updateByPk) // 更新单条
+  .delete("/usergroups/:id", roleAuth(["admin"]), handler.UserGroup.destroyByPk) // 删除单条
+  .post("/usergroups/multiple", roleAuth(["admin"]), handler.UserGroup.bulkCreate) // 创建多条
+
   .post("/login/account", handler.Login.account) // 帐号密码登录
   .post("/login/phone", handler.Login.phone) // 手机登录
   .post("/login/wechat", handler.Login.wechat); // 微信登录

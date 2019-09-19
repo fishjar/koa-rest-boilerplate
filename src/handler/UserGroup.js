@@ -11,24 +11,20 @@ const findAndCountAll = async (ctx, next) => {
   } else if (sorter) {
     order = [sorter.split("__")];
   }
-  const { count, rows } = await model.Menu.findAndCountAll({
+  const { count, rows } = await model.UserGroup.findAndCountAll({
     where,
     offset: (pageNum - 1) * pageSize,
     limit: pageSize > 0 ? pageSize : null,
     order,
     include: [
       {
-        model: model.Role,
-        as: "roles",
+        model: model.User,
+        as: "user",
       },
       {
-        model: model.Menu,
-        as: "parent",
+        model: model.Group,
+        as: "group",
       },
-      // {
-      //   model: model.Menu,
-      //   as: "children",
-      // },
     ],
     distinct: true,
   });
@@ -41,20 +37,9 @@ const findAndCountAll = async (ctx, next) => {
  * 根据主键查询单条信息
  */
 const findByPk = async (ctx, next) => {
-  const menu = await model.Menu.findByPk(ctx.params.id, {
-    include: [
-      {
-        model: model.Menu,
-        as: "parent",
-      },
-      {
-        model: model.Menu,
-        as: "children",
-      },
-    ],
-  });
-  ctx.assert(menu, 404, "记录不存在");
-  ctx.body = menu;
+  const group = await model.UserGroup.findByPk(ctx.params.id);
+  ctx.assert(group, 404, "记录不存在");
+  ctx.body = group;
 
   await next();
 };
@@ -63,7 +48,7 @@ const findByPk = async (ctx, next) => {
  * 创建单条信息
  */
 const singleCreate = async (ctx, next) => {
-  ctx.body = await model.Menu.create(ctx.request.body);
+  ctx.body = await model.UserGroup.create(ctx.request.body);
 
   await next();
 };
@@ -72,7 +57,7 @@ const singleCreate = async (ctx, next) => {
  * 创建多条信息
  */
 const bulkCreate = async (ctx, next) => {
-  ctx.body = await model.Menu.bulkCreate(ctx.request.body, {
+  ctx.body = await model.UserGroup.bulkCreate(ctx.request.body, {
     validate: true,
   });
 
@@ -85,7 +70,7 @@ const bulkCreate = async (ctx, next) => {
 const bulkUpdate = async (ctx, next) => {
   const { id } = ctx.query;
   ctx.assert(id, 400, "参数有误");
-  ctx.body = await model.Menu.update(ctx.request.body, { where: { id } });
+  ctx.body = await model.UserGroup.update(ctx.request.body, { where: { id } });
 
   await next();
 };
@@ -94,9 +79,9 @@ const bulkUpdate = async (ctx, next) => {
  * 更新单条信息
  */
 const updateByPk = async (ctx, next) => {
-  const menu = await model.Menu.findByPk(ctx.params.id);
-  ctx.assert(menu, 404, "记录不存在");
-  ctx.body = await menu.update(ctx.request.body);
+  const group = await model.UserGroup.findByPk(ctx.params.id);
+  ctx.assert(group, 404, "记录不存在");
+  ctx.body = await group.update(ctx.request.body);
 
   await next();
 };
@@ -107,7 +92,7 @@ const updateByPk = async (ctx, next) => {
 const bulkDestroy = async (ctx, next) => {
   const { id } = ctx.query;
   ctx.assert(id, 400, "参数有误");
-  ctx.body = await model.Menu.destroy({ where: { id } });
+  ctx.body = await model.UserGroup.destroy({ where: { id } });
 
   await next();
 };
@@ -116,9 +101,9 @@ const bulkDestroy = async (ctx, next) => {
  * 删除单条信息
  */
 const destroyByPk = async (ctx, next) => {
-  const menu = await model.Menu.findByPk(ctx.params.id);
-  ctx.assert(menu, 404, "记录不存在");
-  ctx.body = await menu.destroy();
+  const group = await model.UserGroup.findByPk(ctx.params.id);
+  ctx.assert(group, 404, "记录不存在");
+  ctx.body = await group.destroy();
 
   await next();
 };
@@ -127,9 +112,9 @@ const destroyByPk = async (ctx, next) => {
  * 查询单条信息
  */
 const findOne = async (ctx, next) => {
-  const menu = await model.Menu.findOne({ where: ctx.query });
-  ctx.assert(menu, 404, "记录不存在");
-  ctx.body = menu;
+  const group = await model.UserGroup.findOne({ where: ctx.query });
+  ctx.assert(group, 404, "记录不存在");
+  ctx.body = group;
 
   await next();
 };
@@ -138,12 +123,12 @@ const findOne = async (ctx, next) => {
  * 查询或创建单条信息
  */
 const findOrCreate = async (ctx, next) => {
-  const [menu, created] = await model.Menu.findOrCreate({
+  const [group, created] = await model.UserGroup.findOrCreate({
     where: ctx.request.body,
   });
   ctx.body = {
-    // ...menu.toJSON(),
-    ...menu.get({ plain: true }),
+    // ...group.toJSON(),
+    ...group.get({ plain: true }),
     created,
   };
 

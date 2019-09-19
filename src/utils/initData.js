@@ -103,7 +103,7 @@ export default async () => {
       menusMenu,
       usergroupsMenu,
     ]);
-    await userRole.setMenus([welcomeMenu]);
+    await userRole.setMenus([welcomeMenu, dashboardMenu, usersMenu, menusMenu]);
 
     // 关联用户角色
     // await user.addRole(userRole);

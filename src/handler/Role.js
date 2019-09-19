@@ -1,4 +1,5 @@
 import model from "../model";
+import sequelize from "../db";
 import { formatMenus } from "../utils";
 
 /**
@@ -21,6 +22,10 @@ const findAndCountAll = async (ctx, next) => {
       {
         model: model.User,
         as: "users",
+      },
+      {
+        model: model.Menu,
+        as: "menus",
       },
     ],
     distinct: true,
@@ -79,7 +84,26 @@ const bulkUpdate = async (ctx, next) => {
 const updateByPk = async (ctx, next) => {
   const role = await model.Role.findByPk(ctx.params.id);
   ctx.assert(role, 404, "记录不存在");
-  ctx.body = await role.update(ctx.request.body);
+  const { menuIds = [], ...fields } = ctx.request.body;
+
+  // // 创建事务
+  // const t = await sequelize.transaction();
+  // // 设置据色菜单
+  // const menus = [];
+  // for (let i = 0; i < menuIds.length; i++) {
+  //   menus.push(await model.Menu.findByPk(menuIds[i]));
+  // }
+  // await role.setMenus(menus, { transaction: t });
+  // // 更新角色资料
+  // ctx.body = await role.update(fields, { transaction: t });
+
+  // 获取菜单列表
+  const menus = await Promise.all(menuIds.map(id => model.Menu.findByPk(id)));
+  // 设置菜单
+  await role.setMenus(menus);
+  // 更新资料
+  const data = await role.update(fields);
+  ctx.body = { ...data.get({ plain: true }), menus };
 
   await next();
 };
@@ -112,10 +136,7 @@ const destroyByPk = async (ctx, next) => {
 const findOne = async (ctx, next) => {
   const role = await model.Role.findOne({ where: ctx.query });
   ctx.assert(role, 404, "记录不存在");
-  const parent = await role.getParent();
-  const child = await role.getChild();
-
-  ctx.body = { ...role.get({ plain: true }), parent, child };
+  ctx.body = role;
 
   await next();
 };
