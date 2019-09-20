@@ -63,10 +63,19 @@ const findByPk = async (ctx, next) => {
         model: model.Role,
         as: "roles",
       },
+      {
+        model: model.Group,
+        as: "groups",
+      },
+      {
+        model: model.User,
+        as: "friends",
+      },
     ],
   });
   ctx.assert(user, 404, "记录不存在");
   ctx.body = user;
+
   await next();
 };
 
@@ -74,7 +83,30 @@ const findByPk = async (ctx, next) => {
  * 创建单条信息
  */
 const singleCreate = async (ctx, next) => {
-  ctx.body = await model.User.create(ctx.request.body);
+  const { roleIds, groupIds, friendIds, ...fields } = ctx.request.body;
+
+  // 创建用户
+  const user = await model.User.create(fields);
+  // 设置角色
+  if (roleIds) {
+    await user.setRoles(
+      await Promise.all(roleIds.map(id => model.Role.findByPk(id)))
+    );
+  }
+  // 设置组
+  if (groupIds) {
+    await user.setGroups(
+      await Promise.all(groupIds.map(id => model.Group.findByPk(id)))
+    );
+  }
+  // 设置朋友
+  if (friendIds) {
+    await user.setFriends(
+      await Promise.all(friendIds.map(id => model.User.findByPk(id)))
+    );
+  }
+
+  ctx.body = user;
 
   await next();
 };
@@ -107,13 +139,28 @@ const bulkUpdate = async (ctx, next) => {
 const updateByPk = async (ctx, next) => {
   const user = await model.User.findByPk(ctx.params.id);
   ctx.assert(user, 404, "记录不存在");
-  const { roleIds, ...data } = ctx.request.body;
-  ctx.body = await user.update(data);
-  if (Array.isArray(roleIds)) {
+  const { roleIds, groupIds, friendIds, ...fields } = ctx.request.body;
+
+  // 设置角色
+  if (roleIds) {
     await user.setRoles(
-      roleIds.map(async item => await model.Role.findByPk(item))
+      await Promise.all(roleIds.map(id => model.Role.findByPk(id)))
     );
   }
+  // 设置组
+  if (groupIds) {
+    await user.setGroups(
+      await Promise.all(groupIds.map(id => model.Group.findByPk(id)))
+    );
+  }
+  // 设置朋友
+  if (friendIds) {
+    await user.setFriends(
+      await Promise.all(friendIds.map(id => model.User.findByPk(id)))
+    );
+  }
+
+  ctx.body = await user.update(fields);
 
   await next();
 };
@@ -135,6 +182,12 @@ const bulkDestroy = async (ctx, next) => {
 const destroyByPk = async (ctx, next) => {
   const user = await model.User.findByPk(ctx.params.id);
   ctx.assert(user, 404, "记录不存在");
+
+  // 删除关联数据
+  await user.setRoles([]);
+  await user.setGroups([]);
+  await user.setFriends([]);
+
   ctx.body = await user.destroy();
 
   await next();
