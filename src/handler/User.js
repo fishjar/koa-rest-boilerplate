@@ -30,12 +30,12 @@ const findAndCountAll = async (ctx, next) => {
       {
         model: model.Role,
         as: "roles",
-        include: [
-          {
-            model: model.Menu,
-            as: "menus",
-          },
-        ],
+        // include: [
+        //   {
+        //     model: model.Menu,
+        //     as: "menus",
+        //   },
+        // ],
       },
       {
         model: model.User,

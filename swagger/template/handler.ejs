@@ -1,5 +1,6 @@
 <%
   const modelKeyLower = modelKey.toLowerCase();
+  const modelAssociations = associations.filter(item=>item.source===modelKey);
 %>
 
 import model from "../model";
@@ -21,7 +22,14 @@ const findAndCountAll = async (ctx, next) => {
     offset: (pageNum - 1) * pageSize,
     limit: pageSize > 0 ? pageSize : null,
     order,
-    include: [],
+    include: [
+      <% modelAssociations.forEach(item=>{ %>
+      {
+        model: model.<%- item.target -%>,
+        as: "<%- item.as -%>",
+      },
+      <% }) %>
+    ],
   });
   ctx.body = { count, rows };
 
@@ -35,7 +43,14 @@ const findAndCountAll = async (ctx, next) => {
  * 根据主键查询单条信息
  */
 const findByPk = async (ctx, next) => {
-  const <%- modelKeyLower -%> = await model.<%- modelKey -%>.findByPk(ctx.params.id);
+  const <%- modelKeyLower -%> = await model.<%- modelKey -%>.findByPk(ctx.params.id, include: [
+    <% modelAssociations.forEach(item=>{ %>
+    {
+      model: model.<%- item.target -%>,
+      as: "<%- item.as -%>",
+    },
+    <% }) %>
+  ]);
   ctx.assert(<%- modelKeyLower -%>, 404, "记录不存在");
   ctx.body = <%- modelKeyLower -%>;
 
