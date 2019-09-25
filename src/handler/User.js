@@ -83,26 +83,26 @@ const findByPk = async (ctx, next) => {
  * 创建单条信息
  */
 const singleCreate = async (ctx, next) => {
-  const { roleIds, groupIds, friendIds, ...fields } = ctx.request.body;
+  const { roles, groups, friends, ...fields } = ctx.request.body;
 
   // 创建用户
   const user = await model.User.create(fields);
   // 设置角色
-  if (roleIds) {
+  if (roles) {
     await user.setRoles(
-      await Promise.all(roleIds.map(id => model.Role.findByPk(id)))
+      await Promise.all(roles.map(id => model.Role.findByPk(id)))
     );
   }
   // 设置组
-  if (groupIds) {
+  if (groups) {
     await user.setGroups(
-      await Promise.all(groupIds.map(id => model.Group.findByPk(id)))
+      await Promise.all(groups.map(id => model.Group.findByPk(id)))
     );
   }
   // 设置朋友
-  if (friendIds) {
+  if (friends) {
     await user.setFriends(
-      await Promise.all(friendIds.map(id => model.User.findByPk(id)))
+      await Promise.all(friends.map(id => model.User.findByPk(id)))
     );
   }
 
@@ -139,24 +139,24 @@ const bulkUpdate = async (ctx, next) => {
 const updateByPk = async (ctx, next) => {
   const user = await model.User.findByPk(ctx.params.id);
   ctx.assert(user, 404, "记录不存在");
-  const { roleIds, groupIds, friendIds, ...fields } = ctx.request.body;
+  const { roles, groups, friends, ...fields } = ctx.request.body;
 
   // 设置角色
-  if (roleIds) {
+  if (roles) {
     await user.setRoles(
-      await Promise.all(roleIds.map(id => model.Role.findByPk(id)))
+      await Promise.all(roles.map(id => model.Role.findByPk(id)))
     );
   }
   // 设置组
-  if (groupIds) {
+  if (groups) {
     await user.setGroups(
-      await Promise.all(groupIds.map(id => model.Group.findByPk(id)))
+      await Promise.all(groups.map(id => model.Group.findByPk(id)))
     );
   }
   // 设置朋友
-  if (friendIds) {
+  if (friends) {
     await user.setFriends(
-      await Promise.all(friendIds.map(id => model.User.findByPk(id)))
+      await Promise.all(friends.map(id => model.User.findByPk(id)))
     );
   }
 

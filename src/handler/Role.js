@@ -84,23 +84,23 @@ const bulkUpdate = async (ctx, next) => {
 const updateByPk = async (ctx, next) => {
   const role = await model.Role.findByPk(ctx.params.id);
   ctx.assert(role, 404, "记录不存在");
-  const { menuIds, ...fields } = ctx.request.body;
+  const { menus, ...fields } = ctx.request.body;
 
   // // 创建事务
   // const t = await sequelize.transaction();
   // // 设置据色菜单
   // const menus = [];
-  // for (let i = 0; i < menuIds.length; i++) {
-  //   menus.push(await model.Menu.findByPk(menuIds[i]));
+  // for (let i = 0; i < menus.length; i++) {
+  //   menus.push(await model.Menu.findByPk(menus[i]));
   // }
   // await role.setMenus(menus, { transaction: t });
   // // 更新角色资料
   // ctx.body = await role.update(fields, { transaction: t });
 
   // 设置菜单
-  if (menuIds) {
+  if (menus) {
     await role.setMenus(
-      await Promise.all(menuIds.map(id => model.Menu.findByPk(id)))
+      await Promise.all(menus.map(id => model.Menu.findByPk(id)))
     );
   }
 

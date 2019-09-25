@@ -81,11 +81,11 @@ const bulkUpdate = async (ctx, next) => {
 const updateByPk = async (ctx, next) => {
   const group = await model.Group.findByPk(ctx.params.id);
   ctx.assert(group, 404, "记录不存在");
-  const { menberIds, ...fields } = ctx.request.body;
+  const { menbers, ...fields } = ctx.request.body;
 
-  if (menberIds) {
+  if (menbers) {
     await group.setMenbers(
-      await Promise.all(menberIds.map(id => model.User.findByPk(id)))
+      await Promise.all(menbers.map(id => model.User.findByPk(id)))
     );
   }
 
