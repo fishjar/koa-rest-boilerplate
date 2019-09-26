@@ -159,31 +159,6 @@ const findOrCreate = async (ctx, next) => {
   await next();
 };
 
-/**
- * 角色菜单
- */
-const findRoleMenus = async (ctx, next) => {
-  const role = await model.Role.findByPk(ctx.params.id);
-  ctx.assert(role, 404, "角色不存在");
-  // const menus = await role.getMenus();
-  const menus = await model.Menu.findAll({
-    include: [
-      {
-        model: model.Role,
-        as: "roles",
-      },
-    ],
-  });
-  const { format } = ctx.query;
-  if (format) {
-    ctx.body = formatMenus(menus, null, ctx.params.id);
-  } else {
-    ctx.body = menus;
-  }
-
-  await next();
-};
-
 export default {
   findAndCountAll,
   findByPk,
@@ -195,5 +170,4 @@ export default {
   destroyByPk,
   findOne,
   findOrCreate,
-  findRoleMenus,
 };

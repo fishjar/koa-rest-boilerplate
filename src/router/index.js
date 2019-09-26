@@ -33,7 +33,6 @@ router
   .delete("/auths/:id", roleAuth(["admin"]), handler.Auth.destroyByPk) // 删除单条
   .post("/auths/multiple", roleAuth(["admin"]), handler.Auth.bulkCreate) // 创建多条
 
-  .get("/role/menus/:id", roleAuth(["admin"]), handler.Role.findRoleMenus) // 根据条件查找单条
   .get("/role", roleAuth(["admin"]), handler.Role.findOne) // 根据条件查找单条
   .post("/role", roleAuth(["admin"]), handler.Role.findOrCreate) // 查找或创建单条
   .get("/roles", roleAuth(["admin"]), handler.Role.findAndCountAll) // 获取多条

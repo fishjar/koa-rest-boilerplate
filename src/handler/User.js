@@ -234,6 +234,11 @@ const findOrCreate = async (ctx, next) => {
   await next();
 };
 
+/**
+ * 获取当前用户菜单
+ * @param {*} ctx 
+ * @param {*} next 
+ */
 const findUserMenus = async (ctx, next) => {
   const { authId } = ctx.state.user;
   const auth = await model.Auth.findByPk(authId, {
@@ -249,12 +254,6 @@ const findUserMenus = async (ctx, next) => {
               {
                 model: model.Menu,
                 as: "menus",
-                include: [
-                  {
-                    model: model.Role,
-                    as: "roles",
-                  },
-                ],
               },
             ],
           },
@@ -269,18 +268,18 @@ const findUserMenus = async (ctx, next) => {
       menusMap[menu.id] = menu;
     });
   });
-  const menus = Object.entries(menusMap).map(([_, item]) => item);
 
-  const { format } = ctx.query;
-  if (format) {
-    ctx.body = formatMenus(menus, null);
-  } else {
-    ctx.body = menus;
-  }
+  ctx.body = Object.entries(menusMap).map(([_, item]) => item);
 
   await next();
 };
 
+
+/**
+ * 获取当前用户信息
+ * @param {*} ctx 
+ * @param {*} next 
+ */
 const findCurrentUser = async (ctx, next) => {
   const { authId } = ctx.state.user;
   const auth = await model.Auth.findByPk(authId, {
