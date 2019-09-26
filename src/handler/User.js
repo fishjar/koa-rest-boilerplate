@@ -90,19 +90,19 @@ const singleCreate = async (ctx, next) => {
   // 设置角色
   if (roles) {
     await user.setRoles(
-      await Promise.all(roles.map(id => model.Role.findByPk(id)))
+      await Promise.all(roles.map(item => model.Role.findByPk(item.id)))
     );
   }
   // 设置组
   if (groups) {
     await user.setGroups(
-      await Promise.all(groups.map(id => model.Group.findByPk(id)))
+      await Promise.all(groups.map(item => model.Group.findByPk(item.id)))
     );
   }
   // 设置朋友
   if (friends) {
     await user.setFriends(
-      await Promise.all(friends.map(id => model.User.findByPk(id)))
+      await Promise.all(friends.map(item => model.User.findByPk(item.id)))
     );
   }
 
@@ -144,19 +144,19 @@ const updateByPk = async (ctx, next) => {
   // 设置角色
   if (roles) {
     await user.setRoles(
-      await Promise.all(roles.map(id => model.Role.findByPk(id)))
+      await Promise.all(roles.map(item => model.Role.findByPk(item.id)))
     );
   }
   // 设置组
   if (groups) {
     await user.setGroups(
-      await Promise.all(groups.map(id => model.Group.findByPk(id)))
+      await Promise.all(groups.map(item => model.Group.findByPk(item.id)))
     );
   }
   // 设置朋友
   if (friends) {
     await user.setFriends(
-      await Promise.all(friends.map(id => model.User.findByPk(id)))
+      await Promise.all(friends.map(item => model.User.findByPk(item.id)))
     );
   }
 

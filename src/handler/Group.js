@@ -85,7 +85,7 @@ const updateByPk = async (ctx, next) => {
 
   if (menbers) {
     await group.setMenbers(
-      await Promise.all(menbers.map(id => model.User.findByPk(id)))
+      await Promise.all(menbers.map(item => model.User.findByPk(item.id)))
     );
   }
 

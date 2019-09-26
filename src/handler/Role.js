@@ -100,7 +100,7 @@ const updateByPk = async (ctx, next) => {
   // 设置菜单
   if (menus) {
     await role.setMenus(
-      await Promise.all(menus.map(id => model.Menu.findByPk(id)))
+      await Promise.all(menus.map(item => model.Menu.findByPk(item.id)))
     );
   }
 

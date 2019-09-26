@@ -1,6 +1,7 @@
 <%
   const modelKeyLower = modelKey.toLowerCase();
-  const modelAssociations = associations.filter(item=>item.source===modelKey);
+  const modelAssociationsAll = associations.filter(item=>item.source===modelKey);
+  const modelAssociationsMany = modelAssociationsAll.filter(item=>item.type==='belongsToMany');
 %>
 
 import model from "../model";
@@ -23,7 +24,7 @@ const findAndCountAll = async (ctx, next) => {
     limit: pageSize > 0 ? pageSize : null,
     order,
     include: [
-      <% modelAssociations.forEach(item=>{ %>
+      <% modelAssociationsAll.forEach(item=>{ %>
       {
         model: model.<%- item.target -%>,
         as: "<%- item.as -%>",
@@ -44,7 +45,7 @@ const findAndCountAll = async (ctx, next) => {
  */
 const findByPk = async (ctx, next) => {
   const <%- modelKeyLower -%> = await model.<%- modelKey -%>.findByPk(ctx.params.id, include: [
-    <% modelAssociations.forEach(item=>{ %>
+    <% modelAssociationsAll.forEach(item=>{ %>
     {
       model: model.<%- item.target -%>,
       as: "<%- item.as -%>",
@@ -64,7 +65,18 @@ const findByPk = async (ctx, next) => {
  * 创建单条信息
  */
 const singleCreate = async (ctx, next) => {
-  ctx.body = await model.<%- modelKey -%>.create(ctx.request.body);
+  const { <% modelAssociationsMany.forEach(item=>{ -%> <%- item.as -%>, <% }); -%> ...fields } = ctx.request.body;
+  const <%- modelKeyLower -%> = await model.<%- modelKey -%>.create(fields);
+
+  <% modelAssociationsMany.forEach(item=>{ %>
+  if (<%- item.as -%>) {
+    await <%- modelKeyLower -%>.set<%- item.target -%>s(
+      await Promise.all(<%- item.as -%>.map(item => model.<%- item.target -%>.findByPk(item.id)))
+    );
+  }
+  <% }); %>
+
+  ctx.body = <%- modelKeyLower -%>;
 
   await next();
 };
@@ -106,7 +118,17 @@ const bulkUpdate = async (ctx, next) => {
 const updateByPk = async (ctx, next) => {
   const <%- modelKeyLower -%> = await model.<%- modelKey -%>.findByPk(ctx.params.id);
   ctx.assert(<%- modelKeyLower -%>, 404, "记录不存在");
-  ctx.body = await <%- modelKeyLower -%>.update(ctx.request.body);
+  const { <% modelAssociationsMany.forEach(item=>{ -%> <%- item.as -%>, <% }); -%> ...fields } = ctx.request.body;
+
+  <% modelAssociationsMany.forEach(item=>{ %>
+  if (<%- item.as -%>) {
+    await <%- modelKeyLower -%>.set<%- item.target -%>s(
+      await Promise.all(<%- item.as -%>.map(item => model.<%- item.target -%>.findByPk(item.id)))
+    );
+  }
+  <% }); %>
+
+  ctx.body = await <%- modelKeyLower -%>.update(fields);
 
   await next();
 };
@@ -135,6 +157,10 @@ const destroyByPk = async (ctx, next) => {
   const <%- modelKeyLower -%> = await model.<%- modelKey -%>.findByPk(ctx.params.id);
   ctx.assert(<%- modelKeyLower -%>, 404, "记录不存在");
   ctx.body = await <%- modelKeyLower -%>.destroy();
+
+  <% modelAssociationsMany.forEach(item=>{ %>
+  await <%- modelKeyLower -%>.set<%- item.target -%>s([]);
+  <% }); %>
 
   await next();
 };
