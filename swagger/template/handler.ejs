@@ -24,12 +24,12 @@ const findAndCountAll = async (ctx, next) => {
     limit: pageSize > 0 ? pageSize : null,
     order,
     include: [
-      <% modelAssociationsAll.forEach(item=>{ %>
+      <% modelAssociationsAll.forEach(item=>{ -%>
       {
         model: model.<%- item.target -%>,
         as: "<%- item.as -%>",
       },
-      <% }) %>
+      <% }) -%>
     ],
   });
   ctx.body = { count, rows };
@@ -45,12 +45,12 @@ const findAndCountAll = async (ctx, next) => {
  */
 const findByPk = async (ctx, next) => {
   const <%- modelKeyLower -%> = await model.<%- modelKey -%>.findByPk(ctx.params.id, include: [
-    <% modelAssociationsAll.forEach(item=>{ %>
+    <% modelAssociationsAll.forEach(item=>{ -%>
     {
       model: model.<%- item.target -%>,
       as: "<%- item.as -%>",
     },
-    <% }) %>
+    <% }) -%>
   ]);
   ctx.assert(<%- modelKeyLower -%>, 404, "记录不存在");
   ctx.body = <%- modelKeyLower -%>;
@@ -68,13 +68,13 @@ const singleCreate = async (ctx, next) => {
   const { <% modelAssociationsMany.forEach(item=>{ -%> <%- item.as -%>, <% }); -%> ...fields } = ctx.request.body;
   const <%- modelKeyLower -%> = await model.<%- modelKey -%>.create(fields);
 
-  <% modelAssociationsMany.forEach(item=>{ %>
+  <% modelAssociationsMany.forEach(item=>{ -%>
   if (<%- item.as -%>) {
     await <%- modelKeyLower -%>.set<%- item.target -%>s(
       await Promise.all(<%- item.as -%>.map(item => model.<%- item.target -%>.findByPk(item.id)))
     );
   }
-  <% }); %>
+  <% }); -%>
 
   ctx.body = <%- modelKeyLower -%>;
 
@@ -120,13 +120,13 @@ const updateByPk = async (ctx, next) => {
   ctx.assert(<%- modelKeyLower -%>, 404, "记录不存在");
   const { <% modelAssociationsMany.forEach(item=>{ -%> <%- item.as -%>, <% }); -%> ...fields } = ctx.request.body;
 
-  <% modelAssociationsMany.forEach(item=>{ %>
+  <% modelAssociationsMany.forEach(item=>{ -%>
   if (<%- item.as -%>) {
     await <%- modelKeyLower -%>.set<%- item.target -%>s(
       await Promise.all(<%- item.as -%>.map(item => model.<%- item.target -%>.findByPk(item.id)))
     );
   }
-  <% }); %>
+  <% }); -%>
 
   ctx.body = await <%- modelKeyLower -%>.update(fields);
 
@@ -158,9 +158,9 @@ const destroyByPk = async (ctx, next) => {
   ctx.assert(<%- modelKeyLower -%>, 404, "记录不存在");
   ctx.body = await <%- modelKeyLower -%>.destroy();
 
-  <% modelAssociationsMany.forEach(item=>{ %>
+  <% modelAssociationsMany.forEach(item=>{ -%>
   await <%- modelKeyLower -%>.set<%- item.target -%>s([]);
-  <% }); %>
+  <% }); -%>
 
   await next();
 };
