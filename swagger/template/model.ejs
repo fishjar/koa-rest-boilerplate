@@ -56,7 +56,7 @@ export default sequelize.define(
         <% } -%>
         validate: {
           <% if (model.required && model.required.includes(fieldKey)) { -%>
-            notEmpty: true,
+          notEmpty: true,
           <% } -%>
           <% if (field.minLength!==undefined && field.maxLength!==undefined) { -%>
           len: [<%- field.minLength -%>, <%- field.maxLength -%>],
@@ -84,8 +84,8 @@ export default sequelize.define(
     <% }) -%>
   },
   {
-    underscored: <%- field['x-underscored'] ? 'true' : 'false' -%>, // 下划线字段
-    paranoid: <%- field['x-paranoid'] ? 'true' : 'false' -%>, // 软删除
+    underscored: <%- !!model['x-underscored'] -%>, // 下划线字段
+    paranoid: <%- !!model['x-paranoid'] -%>, // 软删除
     freezeTableName: true, // 禁用表名自动复数
     tableName: "<%- model['x-tableName'] -%>", // 定义表的名称
   }
